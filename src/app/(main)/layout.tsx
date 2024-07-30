@@ -14,7 +14,7 @@ export default async function MainLayout({
 }) {
   const session = await getServerSession(authConfig);
   if (!session) {
-    return redirect("/login");
+    return redirect("/bienvenida");
   }
   return (
     <>

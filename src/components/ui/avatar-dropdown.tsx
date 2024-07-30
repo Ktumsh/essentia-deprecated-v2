@@ -45,7 +45,7 @@ export default function AvatarDropdown({ session }: any) {
                 icon={<AvatarIcon />}
                 classNames={{
                   icon: "text-base-color-m dark:text-base-color-dark-m size-[80%]",
-                  base: "bg-gray-300 dark:bg-gray-800",
+                  base: "bg-gray-300 dark:bg-gray-600",
                   name: "font-medium text-base-color-h dark:text-base-color-dark-h",
                 }}
               />

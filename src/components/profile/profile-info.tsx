@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Avatar,
   Button,
   DateInput,
   Input,
@@ -14,15 +15,26 @@ import {
   Image as UIImage,
   useDisclosure,
 } from "@nextui-org/react";
-import { AddPhotoIcon, CalendarIcon, LocationIcon2 } from "../icons/icons";
+import {
+  AddPhotoIcon,
+  AvatarIcon,
+  CalendarIcon,
+  LocationIcon2,
+} from "../icons/icons";
 import Image from "next/image";
 
 import Link from "next/link";
 import { usernameOrEmail } from "@/lib/utils";
 import { useRef } from "react";
 
-const getProfileImageUrl = (url: string) => {
-  if (url.includes("googleusercontent")) {
+const getProfileImageUrl = (url: string, provider: string) => {
+  if (!url) {
+    return "";
+  }
+
+  if (provider === "credentials") {
+    return url;
+  } else if (url.includes("googleusercontent")) {
     return url.replace("=s96-c", "=s200-c");
   } else if (url.includes("facebook")) {
     return `${url}?width=200&height=200`;
@@ -46,13 +58,16 @@ const ProfileInfo = ({ session }: any) => {
     }
   };
 
-  const profileImageUrl = getProfileImageUrl(session?.user?.image);
+  const profileImageUrl = getProfileImageUrl(
+    session?.user?.image,
+    session?.provider
+  );
 
   const hasUserName = usernameOrEmail(session);
 
   return (
     <>
-      <div className="relative flex flex-col p-4 pt-3 z-10">
+      <div className="relative flex flex-col px-8 py-3 z-10">
         {/*Foto de perfil y botón editar*/}
         <div className="relative flex flex-wrap justify-between mb-5">
           <div className="relative w-1/5 h-1/5 md:size-[15%] min-w-12 mt-[-15%] mb-3">
@@ -64,27 +79,42 @@ const ProfileInfo = ({ session }: any) => {
                   className="group flex size-full transition-colors"
                 >
                   <div className="size-[calc(100%-4px)] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full overflow-hidden">
-                    <div className="size-full bg-white dark:bg-base-dark"></div>
+                    <div className="size-full bg-white dark:bg-base-full-dark"></div>
                   </div>
                   <div className="size-[calc(100%-12px)] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full overflow-hidden group-hover:brightness-90 transition">
                     <div className="absolute inset-0 overflow-hidden">
-                      <div
-                        className="absolute inset-0 bg-center bg-no-repeat bg-cover size-full"
-                        style={{
-                          backgroundImage: `url(${profileImageUrl})`,
-                        }}
-                      ></div>
-                      <UIImage
-                        as={Image}
-                        width={183}
-                        height={183}
-                        src={profileImageUrl}
-                        alt="Abrir foto"
-                        classNames={{
-                          wrapper: "w-full h-full",
-                          img: "absolute inset-0 size-full object-cover -z-10",
-                        }}
-                      />
+                      {profileImageUrl ? (
+                        <>
+                          <div
+                            className="absolute inset-0 bg-center bg-no-repeat bg-cover size-full"
+                            style={{
+                              backgroundImage: `url(${profileImageUrl})`,
+                            }}
+                          ></div>
+                          <UIImage
+                            as={Image}
+                            width={183}
+                            height={183}
+                            src={profileImageUrl}
+                            alt="Abrir foto"
+                            classNames={{
+                              wrapper: "w-full h-full",
+                              img: "absolute inset-0 size-full object-cover -z-10",
+                            }}
+                          />
+                        </>
+                      ) : (
+                        <Avatar
+                          showFallback
+                          src="https://images.unsplash.com/broken"
+                          icon={<AvatarIcon className="w-16 h-16" />}
+                          classNames={{
+                            icon: "text-base-color-m dark:text-base-color-dark-m size-[80%]",
+                            base: "bg-gray-300 dark:bg-gray-600 absolute inset-0 bg-center bg-no-repeat bg-cover w-full h-full",
+                            name: "font-medium text-base-color-h dark:text-base-color-dark-h",
+                          }}
+                        />
+                      )}
                     </div>
                   </div>
                 </Link>
@@ -96,13 +126,13 @@ const ProfileInfo = ({ session }: any) => {
             color="default"
             radius="full"
             onPress={onOpen}
-            className="border-gray-200 dark:border-base-full-dark hover:!bg-gray-200 dark:hover:!bg-base-full-dark text-base-color dark:text-base-color-dark font-bold"
+            className="border-white dark:border-base-full-dark hover:!bg-white dark:hover:!bg-base-full-dark text-base-color dark:text-base-color-dark font-bold"
           >
             Editar perfil
           </Button>
         </div>
         {/*Información del perfil*/}
-        <div className="flex flex-wrap px-7 mb-3 mt-1">
+        <div className="flex flex-wrap mb-3 mt-1">
           <div className="flex flex-col mr-2">
             <div className="flex flex-col shrink">
               <span className="text-xl font-bold">{session?.user?.name}</span>
@@ -112,14 +142,14 @@ const ProfileInfo = ({ session }: any) => {
             </div>
           </div>
         </div>
-        <div className="px-7 mb-3">
+        <div className="mb-3">
           <div className="flex items-stretch text-sm text-base-color-h dark:text-base-color-dark-h">
             <span>
               briografia dslakdjnlawijdclaijdlacs dlkcajlkcsjdalijwliajlasnm
             </span>
           </div>
         </div>
-        <div className="flex w-full px-7 mb-3 text-base-color-h dark:text-base-color-dark-h">
+        <div className="flex w-full mb-3 text-base-color-h dark:text-base-color-dark-h">
           <span className="flex items-center justify-center gap-1">
             <LocationIcon2 className="size-5 text-base-color-m dark:text-base-color-dark-m" />
             <span className="inline">De Santiago de Chile</span>
@@ -136,10 +166,9 @@ const ProfileInfo = ({ session }: any) => {
         classNames={{
           backdrop: "z-[101]",
           wrapper: "z-[102]",
-          base: "overflow-hidden",
-          body: "gap-0 px-0 py-0 pb-16 bg-white dark:bg-base-dark custom-scroll",
-          header: "flex flex-col gap-1 bg-white dark:bg-base-dark",
-          footer: "bg-white dark:bg-base-dark",
+          base: "overflow-hidden bg-white dark:bg-base-dark",
+          body: "gap-0 px-0 py-0 pb-16 bg-gray-50 dark:bg-base-full-dark custom-scroll",
+          header: "flex flex-col gap-1",
           closeButton:
             "hover:bg-black/5 active:bg-black/10 dark:hover:bg-white/5 dark:active:bg-white/10 transition-colors duration-150",
         }}
@@ -190,7 +219,7 @@ const ProfileInfo = ({ session }: any) => {
                   </div>
                 </div>
                 {/*Foto de perfil*/}
-                <div className="relative ml-4 -mt-12 min-h-32 w-1/4 max-w-32 bg-white dark:bg-base-dark border-2 border-white dark:border-base-dark rounded-full overflow-hidden">
+                <div className="relative ml-4 -mt-12 min-h-32 w-1/4 max-w-32 bg-white dark:bg-base-full-dark border-2 border-white dark:border-base-full-dark rounded-full overflow-hidden">
                   <div className="flex flex-col border-2 border-transparent">
                     <div className="relative flex grow">
                       <div className="size-full overflow-hidden">
@@ -207,23 +236,40 @@ const ProfileInfo = ({ session }: any) => {
                               </div>
                               <div className="size-[calc(100%-4px)] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full overflow-hidden">
                                 <div className="absolute inset-0 overflow-hidden">
-                                  <div
-                                    className="absolute inset-0 bg-center bg-no-repeat bg-cover size-full"
-                                    style={{
-                                      backgroundImage: `url(${profileImageUrl})`,
-                                    }}
-                                  ></div>
-                                  <UIImage
-                                    as={Image}
-                                    width={183}
-                                    height={183}
-                                    src={profileImageUrl}
-                                    alt="Abrir foto"
-                                    classNames={{
-                                      wrapper: "w-full h-full",
-                                      img: "absolute inset-0 size-full object-cover -z-10",
-                                    }}
-                                  />
+                                  {profileImageUrl ? (
+                                    <>
+                                      <div
+                                        className="absolute inset-0 bg-center bg-no-repeat bg-cover size-full"
+                                        style={{
+                                          backgroundImage: `url(${profileImageUrl})`,
+                                        }}
+                                      ></div>
+                                      <UIImage
+                                        as={Image}
+                                        width={183}
+                                        height={183}
+                                        src={profileImageUrl}
+                                        alt="Abrir foto"
+                                        classNames={{
+                                          wrapper: "w-full h-full",
+                                          img: "absolute inset-0 size-full object-cover -z-10",
+                                        }}
+                                      />
+                                    </>
+                                  ) : (
+                                    <Avatar
+                                      showFallback
+                                      src="https://images.unsplash.com/broken"
+                                      icon={
+                                        <AvatarIcon className="w-14 h-14" />
+                                      }
+                                      classNames={{
+                                        icon: "text-base-color-m dark:text-base-color-dark-m size-[80%]",
+                                        base: "bg-gray-300 dark:bg-gray-600 absolute inset-0 bg-center bg-no-repeat bg-cover w-full h-full",
+                                        name: "font-medium text-base-color-h dark:text-base-color-dark-h",
+                                      }}
+                                    />
+                                  )}
                                 </div>
                               </div>
                             </div>
@@ -276,8 +322,28 @@ const ProfileInfo = ({ session }: any) => {
                   color="danger"
                   classNames={{
                     base: "px-4 py-3",
+                    input: "text-base-color dark:text-base-color-dark",
                     inputWrapper:
-                      "border-gray-200 data-[hover=true]:border-gray-400 dark:border-base-full-dark-50 dark:data-[hover=true]:border-base-full-dark",
+                      "border-gray-200 data-[hover=true]:border-gray-200 dark:border-base-dark dark:data-[hover=true]:border-base-dark",
+                  }}
+                />
+                <Input
+                  type="text"
+                  autoCapitalize="sentences"
+                  autoComplete="off"
+                  autoCorrect="on"
+                  maxLength={50}
+                  name="username"
+                  spellCheck={true}
+                  label="Nombre de usuario"
+                  defaultValue={session?.user?.username}
+                  variant="bordered"
+                  color="danger"
+                  classNames={{
+                    base: "px-4 py-3",
+                    input: "text-base-color dark:text-base-color-dark",
+                    inputWrapper:
+                      "border-gray-200 data-[hover=true]:border-gray-200 dark:border-base-dark dark:data-[hover=true]:border-base-dark",
                   }}
                 />
                 <Textarea
@@ -292,8 +358,9 @@ const ProfileInfo = ({ session }: any) => {
                   color="danger"
                   classNames={{
                     base: "px-4 py-3",
+                    input: "text-base-color dark:text-base-color-dark",
                     inputWrapper:
-                      "border-gray-200 data-[hover=true]:border-gray-400 dark:border-base-full-dark-50 dark:data-[hover=true]:border-base-full-dark",
+                      "border-gray-200 data-[hover=true]:border-gray-200 dark:border-base-dark dark:data-[hover=true]:border-base-dark",
                   }}
                 />
                 <Input
@@ -309,8 +376,9 @@ const ProfileInfo = ({ session }: any) => {
                   color="danger"
                   classNames={{
                     base: "px-4 py-3",
+                    input: "text-base-color dark:text-base-color-dark",
                     inputWrapper:
-                      "border-gray-200 data-[hover=true]:border-gray-400 dark:border-base-full-dark-50 dark:data-[hover=true]:border-base-full-dark",
+                      "border-gray-200 data-[hover=true]:border-gray-200 dark:border-base-dark dark:data-[hover=true]:border-base-dark",
                   }}
                 />
                 <DateInput
@@ -324,9 +392,11 @@ const ProfileInfo = ({ session }: any) => {
                   classNames={{
                     base: "px-4 py-3",
                     label:
-                      "text-xs text-base-color-h dark:text-base-color-dark-h",
+                      "text-xs text-bittersweet-400 dark:text-cerise-red-600",
+                    segment:
+                      "data-[editable=true]:text-base-color dark:data-[editable=true]:text-base-color-dark data-[editable=true]:data-[placeholder=true]:text-base-color-m dark:data-[editable=true]:data-[placeholder=true]:text-base-color-dark-m",
                     inputWrapper:
-                      "border-gray-200 dark:border-base-full-dark-50",
+                      "border-gray-200 dark:border-base-dark hover:border-gray-200 dark:hover:border-base-dark",
                     innerWrapper:
                       "text-base-color-m dark:text-base-color-dark-m",
                   }}

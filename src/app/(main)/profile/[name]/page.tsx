@@ -10,8 +10,9 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const name = params.name;
+  const decodedName = decodeURIComponent(name);
   return {
-    title: `Perfil de ${name}`,
+    title: `Perfil de ${decodedName}`,
   };
 }
 

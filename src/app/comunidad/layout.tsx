@@ -5,6 +5,7 @@ import { authConfig } from "@@/auth.config";
 import { getServerSession } from "next-auth";
 
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: {
@@ -18,6 +19,9 @@ export default async function CommunityLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authConfig);
+  if (!session) {
+    return redirect("/bienvenida");
+  }
   return (
     <>
       <div className="page-bg fixed inset-0 size-full bg-cover bg-light-gradient-v2 dark:bg-none"></div>

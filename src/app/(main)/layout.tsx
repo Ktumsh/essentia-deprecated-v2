@@ -22,7 +22,7 @@ export default async function MainLayout({
       <Header session={session} />
       {/* Mobile Header */}
       <MobileHeader session={session} />
-      <LayoutWrapper>{children}</LayoutWrapper>
+      <LayoutWrapper session={session}>{children}</LayoutWrapper>
       {/* Bottom Mobile Navbar */}
       <BottomNav />
       <ButtonUp />

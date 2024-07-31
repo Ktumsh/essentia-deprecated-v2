@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     description:
       "Tu recurso de información esencial y confiable para una vida más saludable y equilibrada",
     type: "website",
-    url: "https://essentia-cl.vercel.app",
+    url: "https://essentia-web.vercel.app",
     siteName: siteConfig.name,
     images: [
       {
@@ -70,12 +70,12 @@ export const metadata: Metadata = {
       {
         url: new URL(
           "/e-logomark-on-dark.webp",
-          "https://essentia-cl.vercel.app"
+          "https://essentia-web.vercel.app"
         ),
       },
     ],
   },
-  metadataBase: new URL("https://essentia-cl.vercel.app"),
+  metadataBase: new URL("https://essentia-web.vercel.app"),
 };
 
 export const viewport: Viewport = {

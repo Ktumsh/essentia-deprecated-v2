@@ -17,7 +17,7 @@ const BottomNav = () => {
   return (
     <Navbar
       classNames={{
-        base: "md:hidden bottom-0 bg-white dark:bg-base-dark z-50",
+        base: "md:hidden bottom-0 bg-white dark:bg-base-dark z-40",
         wrapper: "h-14 justify-center gap-0",
       }}
     >

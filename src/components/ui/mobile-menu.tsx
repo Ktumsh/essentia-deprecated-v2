@@ -4,17 +4,27 @@ import Image from "next/image";
 import { signOut } from "next-auth/react";
 import {
   AvatarIcon,
+  Chevron,
   HelpIcon,
   LogoutIcon,
   SettingsIcon,
   ThemeIcon,
 } from "../icons/icons";
 import { CommunityIcon } from "../icons/main";
-import { Avatar } from "@nextui-org/react";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Listbox,
+  ListboxItem,
+} from "@nextui-org/react";
 import { ThemeToggle } from "../theme-toggle";
 import { MOBILE_MENU_CONTENT_ID } from "@/consts/mobile-menu";
-import { getFirstNameAndLastName } from "@/lib/utils";
+import { cn, getFirstNameAndLastName } from "@/lib/utils";
 import { Session } from "next-auth";
+import { siteConfig } from "@/config/site";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface Props {
   isMenuOpen: boolean;
@@ -22,10 +32,19 @@ interface Props {
 }
 
 const MobileMenu = ({ isMenuOpen, session }: Props) => {
+  const [currentPath, setCurrentPath] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+
   const normalizeName = getFirstNameAndLastName(session?.user?.name);
   const hasUsername = session?.user?.username
     ? `@${session.user.username}`
     : session?.user?.email;
+
+  const resourceLinks = siteConfig.asideMenuLinks;
+
+  useEffect(() => {
+    setCurrentPath(window.location.pathname);
+  }, []);
 
   return (
     <>
@@ -85,18 +104,84 @@ const MobileMenu = ({ isMenuOpen, session }: Props) => {
                   </a>
                 </div>
               </div>
-              <hr className="border-none h-5" />
-              <hr className="h-5 border-t-0 border-b-1 border-gray-200 dark:border-base-dark" />
-              <hr className="h-5 border-none" />
-              <div className="subMenu group">
-                <a
-                  href="/comunidad"
-                  className="relative flex items-center w-full py-3 font-medium"
-                  aria-label="Comunidad"
+              <div className="group flex mt-5">
+                <Button
+                  variant="light"
+                  radius="none"
+                  disableRipple
+                  fullWidth
+                  endContent={
+                    <Chevron
+                      className={cn(
+                        isOpen ? "rotate-90" : "-rotate-90",
+                        "size-6 transition-transform"
+                      )}
+                    />
+                  }
+                  className={cn(
+                    isOpen
+                      ? "text-black dark:text-white"
+                      : "text-base-color-h dark:text-base-color-dark-h",
+                    "justify-between px-0 text-base font-medium bg-transparent data-[hover=true]:bg-transparent data-[pressed=true]:scale-100"
+                  )}
+                  onPress={() => setIsOpen(!isOpen)}
                 >
-                  <CommunityIcon className="mr-3" width="24" height="24" />
+                  Recursos
+                </Button>
+              </div>
+              <div
+                className={cn(
+                  isOpen ? "h-[268px] opacity-100" : "h-0 opacity-0",
+                  "overflow-hidden transition-all"
+                )}
+              >
+                <Listbox
+                  classNames={{
+                    base: "px-0 pt-3",
+                    list: "gap-3",
+                  }}
+                >
+                  {resourceLinks.map((link) => (
+                    <ListboxItem
+                      key={link.name}
+                      href={link.link}
+                      variant="light"
+                      startContent={
+                        <link.icon
+                          className={`size-5 transition-colors ${
+                            currentPath === link.link
+                              ? "text-bittersweet-400 dark:text-cerise-red-400"
+                              : "text-base-color-h dark:text-base-color-dark"
+                          }`}
+                        />
+                      }
+                      classNames={{
+                        base: "px-0",
+                      }}
+                      className={
+                        currentPath === link.link
+                          ? "text-bittersweet-400 dark:text-cerise-red-400"
+                          : "text-base-color-h dark:text-base-color-dark-h"
+                      }
+                    >
+                      {link.name}
+                    </ListboxItem>
+                  ))}
+                </Listbox>
+              </div>
+              <Divider className="mt-5 bg-gray-200 dark:bg-base-dark" />
+              <div className="group mt-5">
+                <Button
+                  as={Link}
+                  href="/comunidad"
+                  aria-label="Comunidad"
+                  variant="solid"
+                  radius="none"
+                  startContent={<CommunityIcon className="size-5" />}
+                  className="justify-start px-0 text-base font-medium bg-transparent text-base-color-h dark:text-base-color-dark-h"
+                >
                   Comunidad
-                </a>
+                </Button>
               </div>
             </div>
             <footer className="flex flex-col w-full text-base-color-m dark:text-base-color-dark-m">

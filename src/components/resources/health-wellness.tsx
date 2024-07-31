@@ -68,12 +68,12 @@ const HealthWellness = () => {
             Recomendados
           </h3>
         </div>
-        <div className="grid grid-cols-2 gap-5">
+        <div className="grid grid-cols-12 gap-5">
           {videos.map((video, index) => (
             <Fragment key={index}>
               <Card
                 classNames={{
-                  base: "border border-gray-100 dark:border-base-dark bg-white dark:bg-base-full-dark on-scroll shadow-md",
+                  base: "col-span-12 md:col-span-6 border border-gray-100 dark:border-base-dark bg-white dark:bg-base-full-dark on-scroll shadow-md",
                   body: "p-0",
                 }}
                 shadow="sm"

@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <div className="p-4">
+    <div className="p-4 hidden lg:block">
       <footer aria-label="Essentia" role="contentinfo">
         <span className="text-xs text-base-color-h dark:text-base-color-dark-h">
           <ul className="inline">

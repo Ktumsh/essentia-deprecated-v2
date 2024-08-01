@@ -9,6 +9,7 @@ import {
   CalendarIcon,
   ArrowRightV2Icon,
   UserIcon,
+  QuestionIcon,
 } from "../icons/icons";
 import SignInWith from "./signin-with";
 import { signup } from "@/app/signup/actions";
@@ -19,6 +20,10 @@ import {
   DateValue,
   Divider,
   Input,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Tooltip,
 } from "@nextui-org/react";
 import Link from "next/link";
 import {
@@ -103,16 +108,16 @@ const SignUpEntry = () => {
         if (signInResult && !signInResult.error) {
           router.push("/login");
         } else {
-          throw new Error("No se pudo iniciar sesión después del registro");
+          throw new Error(ErrorMessages.LOGIN_ROUTE_ERROR);
         }
       } else {
-        throw new Error(result.error || "Error al crear la cuenta");
+        throw new Error(result.error || ErrorMessages.ACCOUNT_CREATED_ERROR);
       }
     } catch (error) {
       if (error instanceof Error) {
-        alert(`Ha ocurrido un error: ${error.message}`);
+        alert(`${ErrorMessages.ERROR} ${error.message}`);
       } else {
-        alert("Ha ocurrido un error desconocido");
+        alert(ErrorMessages.UNKNOWN_ERROR);
       }
     }
   };
@@ -145,7 +150,7 @@ const SignUpEntry = () => {
         setStep(2);
       }
     } catch (error) {
-      alert("Error verificando el correo electrónico");
+      alert(ErrorMessages.EMAIL_VERIFICATION_ERROR);
     }
   };
 
@@ -287,29 +292,69 @@ const SignUpEntry = () => {
                   description: "text-base-color-dark sm:text-base-color-m",
                 }}
               />
-              <DateInput
-                isRequired
-                label="Fecha de nacimiento"
-                aria-label="Fecha de nacimiento"
-                description="Este es mi cumpleaños."
-                value={birthdate}
-                onChange={(date) => {
-                  setBirthdate(date);
-                  setFieldErrors((prevErrors) => ({
-                    ...prevErrors,
-                    birthdate: "",
-                  }));
-                }}
-                endContent={
-                  <CalendarIcon className="size-6 text-base-color-m" />
-                }
-                errorMessage={fieldErrors.birthdate}
-                isInvalid={!!fieldErrors.birthdate}
-                color={fieldErrors.birthdate ? "danger" : "default"}
-                classNames={{
-                  description: "text-base-color-dark sm:text-base-color-m",
-                }}
-              />
+              <div className="relative">
+                <Popover
+                  showArrow
+                  placement="left"
+                  classNames={{
+                    base: "max-w-80",
+                  }}
+                >
+                  <PopoverTrigger>
+                    <div className="absolute top-2.5 left-3">
+                      <Tooltip
+                        className="bg-white text-xs text-base-color-h"
+                        content="Haz click para obtener más información"
+                        placement="top"
+                        delay={500}
+                        closeDelay={0}
+                      >
+                        <button
+                          type="button"
+                          className="flex items-center justify-center size-3 bg-bittersweet-300 rounded-full"
+                        >
+                          <QuestionIcon className="size-2 text-white" />
+                        </button>
+                      </Tooltip>
+                    </div>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <div className="px-1 py-2">
+                      <div className="text-xs font-bold">
+                        Cuando proporcionas tu fecha de nacimiento,
+                      </div>
+                      <p className="text-xs">
+                        obtendrás una experiencia en Essentia adecuada para tu
+                        edad. Si quieres cambiar quién ve tu fecha de
+                        nacimiento, puedes ir a la configuración de tu perfil.
+                      </p>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+                <DateInput
+                  isRequired
+                  label="Fecha de nacimiento"
+                  aria-label="Fecha de nacimiento"
+                  description="Este es mi cumpleaños."
+                  value={birthdate}
+                  onChange={(date) => {
+                    setBirthdate(date);
+                    setFieldErrors((prevErrors) => ({
+                      ...prevErrors,
+                      birthdate: "",
+                    }));
+                  }}
+                  endContent={<CalendarIcon className="size-6" />}
+                  errorMessage={fieldErrors.birthdate}
+                  isInvalid={!!fieldErrors.birthdate}
+                  color={fieldErrors.birthdate ? "danger" : "default"}
+                  classNames={{
+                    label: "ml-5",
+                    description: "text-base-color-dark sm:text-base-color-m",
+                    innerWrapper: "text-base-color-m",
+                  }}
+                />
+              </div>
               <Input
                 isRequired
                 name="password"

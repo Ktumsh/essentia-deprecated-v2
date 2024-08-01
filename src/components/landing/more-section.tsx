@@ -1,3 +1,4 @@
+import Link from "next/link";
 import MoreSectonItem from "./more-section-item";
 
 const MoreSection = () => {
@@ -49,14 +50,14 @@ const MoreSection = () => {
               </article>
               <div className="relative flex flex-col -mx-6 px-6">
                 <div className="w-full mt-6">
-                  <a
+                  <Link
                     type="button"
                     aria-label="Registrar usuario"
                     className="relative inline-flex items-center justify-center overflow-hidden h-10 w-full py-3 px-4 sm:px-8 font-medium text-lg rounded-full bg-light-gradient hover:brightness-90 active:scale-[.98] text-white shadow-md transition"
                     href="/signup"
                   >
                     Comenzar
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

@@ -1,5 +1,6 @@
 import { Image } from "@nextui-org/react";
 import { ArrowRightV2Icon } from "../icons/icons";
+import Link from "next/link";
 
 type Props = {
   class?: string;
@@ -48,8 +49,8 @@ const ResourcesItem = ({
       <div className="absolute inset-0 rounded-xl bg-[linear-gradient(to_bottom,_rgba(0,_0,_0,_0.4)_0%,_rgba(0,_0,_0,_0)_40%)]"></div>
       <div className="flex items-center justify-end absolute bottom-0 h-auto w-full p-3 text-inherit subpixel-antialiased rounded-b-xl bg-white/30 dark:bg-base-full-dark-40 border-t-1 border-gray-100/50 dark:border-base-full-dark-50 backdrop-blur backdrop-saturate-150 lg:group-hover:pt-[195px] lg:group-hover:bg-white/50 dark:lg:group-hover:bg-base-full-dark-40 lg:group-hover:rounded-xl transition-all duration-500 z-10">
         {children}
-        <a
-          href={href}
+        <Link
+          href={href || "#"}
           className="relative inline-flex h-8 w-12 items-center justify-center overflow-hidden rounded-full cursor-pointer text-sm font-normal text-white shadow-md bg-light-gradient dark:bg-dark-gradient-v2 transition-all duration-300 hover:brightness-90 active:scale-[.97] lg:group-hover:w-20 lg:group-hover:-translate-x-4"
         >
           <div className="inline-flex whitespace-nowrap opacity-0 transition-all duration-200 lg:group-hover:-translate-x-3 lg:group-hover:opacity-100">
@@ -58,7 +59,7 @@ const ResourcesItem = ({
           <div className="absolute right-3.5">
             <ArrowRightV2Icon className="size-5" />
           </div>
-        </a>
+        </Link>
       </div>
     </div>
   );

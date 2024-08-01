@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { ArrowUpIcon, LinkIcon } from "../icons/icons";
+import Link from "next/link";
 
 interface MessageInputProps {
   handleSubmit: (event: React.FormEvent) => Promise<void>;
@@ -50,24 +51,24 @@ const MessageInput: React.FC<MessageInputProps> = ({
             </div>
           </form>
           <p className="text-base-color-d dark:text-base-color-dark-d px-2 text-center text-xs leading-normal hidden sm:block font-dmsans">
-            Impulsado por el modelo
-            <a
+            Impulsado por el modelo {""}
+            <Link
               href="https://cohere.com/command"
               target="_blank"
               className="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
             >
               <span>command-r-plus</span>
               <LinkIcon />
-            </a>
-            de
-            <a
+            </Link>
+            de {""}
+            <Link
               href="https://cohere.com/"
               target="_blank"
               className="inline-flex flex-1 justify-center gap-1 leading-4 hover:underline"
             >
               <span>Cohere</span>
               <LinkIcon />
-            </a>
+            </Link>
             .
           </p>
         </div>

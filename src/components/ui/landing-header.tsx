@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 const LandingHeader = () => {
@@ -136,7 +137,7 @@ const LandingHeader = () => {
           >
             {isChanged && !isRestringedPath() ? (
               sections.map((section) => (
-                <a
+                <Link
                   key={section.id}
                   href={`#${section.id}`}
                   className={`nav_link font-medium hover:text-transparent after:hover:bg-transparent hover:bg-light-gradient bg-clip-text hover:scale-105  after:hover:bg-light-gradient mr-5 px-2 transition-transform duration-100 ${
@@ -145,10 +146,10 @@ const LandingHeader = () => {
                   onClick={(e) => handleSmoothScroll(e, section.id)}
                 >
                   {section.label}
-                </a>
+                </Link>
               ))
             ) : (
-              <a
+              <Link
                 className="font-grotesk font-normal active:scale-95 overflow-hidden transition-transform relative items-center rounded-full inline-flex gap-2"
                 href="/"
               >
@@ -160,7 +161,7 @@ const LandingHeader = () => {
                   alt="Logo de Essentia"
                 />
                 <span className="not-sr-only">Essentia®️</span>
-              </a>
+              </Link>
             )}
           </div>
           <div
@@ -171,7 +172,7 @@ const LandingHeader = () => {
                 : "opacity-100"
             }`}
           >
-            <a
+            <Link
               className={`btn-login-popup relative items-center justify-center overflow-hidden h-10 w-auto px-3 sm:px-4 rounded-xl text-bittersweet-400 sm:text-white sm:bg-bittersweet-400 hover:brightness-90 active:scale-95 transition ${
                 isChanged ? "hidden" : "inline-flex"
               }`}
@@ -179,7 +180,7 @@ const LandingHeader = () => {
               aria-label="Iniciar sesión"
             >
               Iniciar sesión
-            </a>
+            </Link>
           </div>
         </div>
       </nav>

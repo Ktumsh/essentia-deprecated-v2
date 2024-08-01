@@ -16,7 +16,8 @@ import { usePathname } from "next/navigation";
 
 import { normalizedPathName } from "@/lib/utils";
 
-import { Button, Input, Link, Navbar, NavbarContent } from "@nextui-org/react";
+import { Button, Input, Navbar, NavbarContent } from "@nextui-org/react";
+import Link from "next/link";
 
 const Header = ({ session }: any) => {
   const pathname = usePathname();
@@ -45,29 +46,32 @@ const Header = ({ session }: any) => {
         <div className="z-40 fixed top-0 left-0">
           <div className="flex items-center justify-center w-full px-4 h-14 gap-5">
             <div className="flex items-center gap-2 w-fit">
-              <a
+              <Link
                 className="relative hidden sm:block size-10 active:scale-95 transition-transform rounded-full"
                 href="/"
                 aria-label="Página de inicio"
               >
                 <Image
                   className="size-10 block dark:hidden origin-center transition-all ease-in-out"
-                  width={1500}
-                  height={1500}
+                  width={40}
+                  height={40}
                   src="/e-logomark-on-light.webp"
                   alt="Logo de Essentia"
                 />
                 <Image
                   className="size-10 hidden dark:block origin-center transition-all ease-in-out"
-                  width={1500}
-                  height={1500}
+                  width={40}
+                  height={40}
                   src="/e-logomark-on-dark.webp"
                   alt="Logo de Essentia"
                 />
-              </a>
-              <span className="hidden xl:block font-grotesk text-base-color dark:text-white/95">
+              </Link>
+              <Link
+                href="/"
+                className="hidden xl:block font-grotesk text-base-color dark:text-white/95"
+              >
                 Essentia®️
-              </span>
+              </Link>
             </div>
             <Input
               classNames={{

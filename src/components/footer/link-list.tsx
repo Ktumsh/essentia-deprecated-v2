@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 interface Props {
   href?: string;
   title: string;
@@ -16,22 +18,22 @@ const LinkList = ({ href, title, links }: Props) => {
             {title}
           </div>
         ) : (
-          <a
+          <Link
             className="border-b inline-block border-transparent text-md mb-2 font-bold"
-            href={href}
+            href={href || "#"}
           >
             {title}
-          </a>
+          </Link>
         )}
       </div>
       {links.map((link, index) => (
         <div key={index}>
-          <a
+          <Link
             className="border-b inline-block border-transparent text-sm hover:border-current dark:text-base-color-dark"
             href={link.href}
           >
             {link.text}
-          </a>
+          </Link>
         </div>
       ))}
     </div>

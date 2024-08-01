@@ -1,6 +1,7 @@
 import { Button, Image } from "@nextui-org/react";
 
 import { ArrowRightIcon } from "../icons/icons";
+import Link from "next/link";
 
 type Props = {
   id: string;
@@ -30,7 +31,7 @@ const RecomCarouselItem = ({
       data-carousel-item={isActive ? "active" : ""}
     >
       <div className="absolute inset-0 z-30">
-        <a href={url}>
+        <Link href={url}>
           <div className="flex flex-col items-center sm:items-start justify-center h-full py-8 sm:py-16 px-14 sm:px-24 sm:pr-56 md:pr-80 w-full text-start bg-[radial-gradient(rgba(0,0,0,0.4)_0%,rgba(0,0,0,0.2)_100%)] sm:bg-[linear-gradient(to_right,rgba(0,0,0,0.5)_50%,rgba(0,0,0,0)_100%)]">
             <h1 className="mb-4 text-center sm:text-start text-xl font-medium tracking-tight leading-none text-white md:text-2xl lg:text-4xl dark:text-white">
               {title}
@@ -45,7 +46,7 @@ const RecomCarouselItem = ({
               </Button>
             </div>
           </div>
-        </a>
+        </Link>
       </div>
       <Image
         src={image}

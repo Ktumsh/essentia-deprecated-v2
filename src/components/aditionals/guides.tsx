@@ -1,6 +1,7 @@
 import { Button, Card, Chip, Tooltip } from "@nextui-org/react";
 
 import { DownloadIcon, StarIcon } from "../icons/icons";
+import Link from "next/link";
 
 export default function Guides() {
   const guides = [
@@ -98,7 +99,7 @@ export default function Guides() {
                     radius="sm"
                     className="px-0"
                   >
-                    <a
+                    <Link
                       download={guide.downloadTitle || undefined}
                       href={guide.link}
                       className="flex items-center justify-center size-full gap-2 px-4"
@@ -107,7 +108,7 @@ export default function Guides() {
                       <span>
                         <DownloadIcon className="w-7" />
                       </span>
-                    </a>
+                    </Link>
                   </Button>
                 </div>
               </div>

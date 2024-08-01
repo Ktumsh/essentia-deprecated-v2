@@ -1,6 +1,7 @@
 import { Image as UIImage } from "@nextui-org/react";
 import Image from "next/image";
 import { ClockIcon, EyeIcon } from "../icons/icons";
+import Link from "next/link";
 
 interface Props {
   className?: string;
@@ -60,11 +61,11 @@ const NewsGridItem = ({
         h-80 rounded-xl shadow-md 
         dark:shadow-none overflow-hidden`}
     >
-      <a
+      <Link
         href={url}
         target="_blank"
         className="before:absolute before:inset-0 before:z-20"
-      ></a>
+      ></Link>
       <UIImage
         as={Image}
         width={571}
@@ -86,7 +87,7 @@ const NewsGridItem = ({
         </div>
         <div className="flex flex-col items-center w-full gap-5 text-base-color-dark z-10">
           <div className="flex flex-col items-start  gap-4 sm:gap-5 size-full">
-            <a
+            <Link
               href={sourceUrl}
               className="flex flex-row items-center justify-center h-full gap-2"
             >
@@ -99,7 +100,7 @@ const NewsGridItem = ({
                 alt={creator}
               />
               <span className="text-xs text-nowrap">{creator}</span>
-            </a>
+            </Link>
           </div>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 size-full">
             <div className="flex flex-row  items-center justify-center h-full gap-2">

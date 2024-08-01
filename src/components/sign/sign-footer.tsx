@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { GithubIcon, InstagramIcon, TwitterIcon } from "../icons/icons";
 
 const SignFooter = () => {
@@ -8,28 +9,28 @@ const SignFooter = () => {
           <div className="flex flex-col sm:flex-row justify-between items-center py-6 gap-4 select-none">
             <div className="flex items-center justify-start sm:w-[33%] text-sm gap-4">
               <div>
-                <a
+                <Link
                   className="border-b inline-block border-transparent hover:border-current"
                   href=""
                 >
                   Privacidad
-                </a>
+                </Link>
               </div>
               <div>
-                <a
+                <Link
                   className="border-b inline-block border-transparent hover:border-current"
                   href=""
                 >
                   Términos
-                </a>
+                </Link>
               </div>
               <div>
-                <a
+                <Link
                   className="border-b inline-block border-transparent hover:border-current"
                   href=""
                 >
                   Cookies
-                </a>
+                </Link>
               </div>
             </div>
             <div className="flex flex-col items-center justify-center order-3 sm:w-[33%] sm:order-none">
@@ -39,27 +40,27 @@ const SignFooter = () => {
             </div>
 
             <div className="flex flex-row items-center justify-end sm:w-[33%] gap-x-3">
-              <a
+              <Link
                 className="hover:text-bittersweet-400 hover:scale-125 transition-all"
                 href="https://www.instagram.com/ktumsh/"
                 target="_blank"
               >
                 <InstagramIcon className="size-6" />
-              </a>
-              <a
+              </Link>
+              <Link
                 className="hover:text-bittersweet-400 hover:scale-125 transition-all"
                 href="https://twitter.com"
                 target="_blank"
               >
                 <TwitterIcon className="size-[21px]" />
-              </a>
-              <a
+              </Link>
+              <Link
                 className="hover:text-bittersweet-400 hover:scale-125 transition-all"
                 href="https://github.com/Ktumsh/essentia-web"
                 target="_blank"
               >
                 <GithubIcon className="size-6" />
-              </a>
+              </Link>
             </div>
           </div>
         </footer>

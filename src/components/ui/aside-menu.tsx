@@ -5,6 +5,7 @@ import { Button } from "@nextui-org/react";
 import { siteConfig } from "@/config/site";
 import Greeting from "@/components/greeting";
 import Footer from "./footer";
+import Link from "next/link";
 
 const AsideMenu = () => {
   const [currentPath, setCurrentPath] = useState("");
@@ -35,7 +36,7 @@ const AsideMenu = () => {
             <ul>
               {asideLinks.map((link, index) => (
                 <li key={index} className="w-fit lg:w-full">
-                  <a href={link.link}>
+                  <Link href={link.link}>
                     <Button
                       disableRipple
                       fullWidth
@@ -63,7 +64,7 @@ const AsideMenu = () => {
                         {link.name}
                       </span>
                     </Button>
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

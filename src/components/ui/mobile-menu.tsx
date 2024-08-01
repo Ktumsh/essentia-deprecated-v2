@@ -66,7 +66,7 @@ const MobileMenu = ({ isMenuOpen, session }: Props) => {
               <div className="flex w-full h-auto py-5 border-b-1 border-gray-200 dark:border-base-dark">
                 <div className="inline-flex flex-col items-start justify-center gap-2">
                   {session?.user?.image ? (
-                    <a href="#" aria-label="Perfil de usuario">
+                    <Link href="#" aria-label="Perfil de usuario">
                       <Image
                         className="size-8 rounded-full"
                         width={96}
@@ -74,9 +74,9 @@ const MobileMenu = ({ isMenuOpen, session }: Props) => {
                         src={session?.user?.image}
                         alt="Avatar del usuario"
                       />
-                    </a>
+                    </Link>
                   ) : (
-                    <a
+                    <Link
                       className="relative flex justify-center items-center overflow-hidden align-middle size-8 z-0 rounded-full bg-gradient-to-tr from-pink-500 to-yellow-500 active:brightness-90 active:scale-95 transition-[filter,_transform] duration-100"
                       href="#"
                     >
@@ -89,9 +89,9 @@ const MobileMenu = ({ isMenuOpen, session }: Props) => {
                           icon: "text-base-color-m size-[80%]",
                         }}
                       />
-                    </a>
+                    </Link>
                   )}
-                  <a
+                  <Link
                     className="inline-flex flex-col items-start active:bg-gray-200 dark:active:bg-base-dark transition-colors duration-100"
                     href="#"
                   >
@@ -101,7 +101,7 @@ const MobileMenu = ({ isMenuOpen, session }: Props) => {
                     <span className="text-sm text-base-color-m dark:text-base-color-dark-d transition-none">
                       {hasUsername}
                     </span>
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="group flex mt-5">
@@ -136,6 +136,7 @@ const MobileMenu = ({ isMenuOpen, session }: Props) => {
                 )}
               >
                 <Listbox
+                  aria-label="Recursos"
                   classNames={{
                     base: "px-0 pt-3",
                     list: "gap-3",
@@ -185,20 +186,20 @@ const MobileMenu = ({ isMenuOpen, session }: Props) => {
               </div>
             </div>
             <footer className="flex flex-col w-full text-base-color-m dark:text-base-color-dark-m">
-              <a
+              <Link
                 className="relative flex items-center w-full py-5 text-sm"
                 href=""
               >
                 <SettingsIcon className="mr-3 size-[14px]" />
                 Configuración
-              </a>
-              <a
+              </Link>
+              <Link
                 className="relative flex items-center w-full py-5 text-sm"
                 href=""
               >
                 <HelpIcon className="mr-3 size-[14px]" />
                 Centro de Ayuda
-              </a>
+              </Link>
               <div className="w-full flex items-center justify-between py-3">
                 <div className="flex flex-row items-center">
                   <ThemeIcon className="mr-3 size-[14px]" />

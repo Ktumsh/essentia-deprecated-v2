@@ -164,14 +164,14 @@ const LoginEntry = () => {
       <div className="flex items-center justify-center text-[13px] text-center self-center mt-2 text-gray-200 sm:text-base-color-h">
         <p>
           ¿No tienes una cuenta?{" "}
-          <a
+          <Link
             id="register-base-color"
             className="register-base-color font-bold sm:font-medium text-orient-600 sm:text-orient-700"
             href="/signup"
             aria-label="Regístrate"
           >
             Regístrate
-          </a>
+          </Link>
         </p>
       </div>
     </div>

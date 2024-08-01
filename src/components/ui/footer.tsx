@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const Footer = () => {
   return (
     <div className="p-4 hidden lg:block">
@@ -5,27 +7,47 @@ const Footer = () => {
         <span className="text-xs text-base-color-h dark:text-base-color-dark-h">
           <ul className="inline">
             <li className="inline">
-              <a href="" role="link" target="_self" className="hover:underline">
+              <Link
+                href=""
+                role="link"
+                target="_self"
+                className="hover:underline"
+              >
                 Política de privacidad
-              </a>
+              </Link>
               <span aria-hidden="true"> • </span>
             </li>
             <li className="inline">
-              <a href="" role="link" target="_self" className="hover:underline">
+              <Link
+                href=""
+                role="link"
+                target="_self"
+                className="hover:underline"
+              >
                 Términos y condiciones
-              </a>
+              </Link>
               <span aria-hidden="true"> • </span>
             </li>
             <li className="inline">
-              <a href="" role="link" target="_self" className="hover:underline">
+              <Link
+                href=""
+                role="link"
+                target="_self"
+                className="hover:underline"
+              >
                 Cookies
-              </a>
+              </Link>
               <span aria-hidden="true"> • </span>
             </li>
             <li className="inline">
-              <a href="" role="link" target="_self" className="hover:underline">
+              <Link
+                href=""
+                role="link"
+                target="_self"
+                className="hover:underline"
+              >
                 Acerca de
-              </a>
+              </Link>
             </li>
             <li className="flex flex-col text-base-color-m dark:text-base-color-dark-m mt-2">
               © 2024 Essentia®️

@@ -15,6 +15,7 @@ import {
 import { GoBackIcon } from "../icons/icons";
 import ProfileDropdown from "./profile-dropdown";
 import Image from "next/image";
+import Link from "next/link";
 
 const CommunityHeader = ({ session }: { session: any }) => {
   const router = useRouter();
@@ -72,40 +73,40 @@ const CommunityHeader = ({ session }: { session: any }) => {
         <div className="flex flex-col items-center justify-between lg:p-2">
           <div className="flex flex-col items-center lg:items-stretch">
             <div className="hidden lg:block w-fit h-full p-3 rounded-full">
-              <a href="/comunidad" className="inline-flex dark:hidden">
+              <Link href="/comunidad" className="inline-flex dark:hidden">
                 <Image
                   width={192}
                   height={66}
                   src="/essentia-community-logo-light.png"
                   alt="Essentia Community Logo"
                 />
-              </a>
-              <a href="/comunidad" className="dark:inline-flex hidden">
+              </Link>
+              <Link href="/comunidad" className="dark:inline-flex hidden">
                 <Image
                   width={192}
                   height={66}
                   src="/essentia-community-logo-dark.png"
                   alt="Essentia Community Logo"
                 />
-              </a>
+              </Link>
             </div>
             <div className="lg:hidden w-fit h-full p-3 rounded-full">
-              <a href="/comunidad" className="inline-flex dark:hidden">
+              <Link href="/comunidad" className="inline-flex dark:hidden">
                 <Image
                   width={28}
                   height={28}
                   src="/e-logomark-on-light.webp"
                   alt="Essentia Community Logo"
                 />
-              </a>
-              <a href="/comunidad" className="dark:inline-flex hidden">
+              </Link>
+              <Link href="/comunidad" className="dark:inline-flex hidden">
                 <Image
                   width={28}
                   height={28}
                   src="/e-logomark-on-dark.webp"
                   alt="Essentia Community Logo"
                 />
-              </a>
+              </Link>
             </div>
             <ul>
               {headerLinks.map((link, index) => {
@@ -147,7 +148,7 @@ const CommunityHeader = ({ session }: { session: any }) => {
             </ul>
           </div>
           <div className="flex flex-col items-center lg:items-stretch w-full">
-            <a className="w-fit" href="/">
+            <Link className="w-fit" href="/">
               <Button
                 size="lg"
                 radius="full"
@@ -162,7 +163,7 @@ const CommunityHeader = ({ session }: { session: any }) => {
                   Volver a Essentia
                 </span>
               </Button>
-            </a>
+            </Link>
             <ProfileDropdown
               name={normalizeName}
               username={hasUsername}

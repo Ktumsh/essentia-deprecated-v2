@@ -11,6 +11,7 @@ import {
   WellbeingIcon,
 } from "../icons/main";
 import { BackIcon } from "../icons/icons";
+import Link from "next/link";
 
 const ResourceTabs = () => {
   const [currentPath, setCurrentPath] = useState("");
@@ -57,18 +58,18 @@ const ResourceTabs = () => {
         <div className="bg-noise bg-repeat bg-[length:100px] pointer-events-none absolute inset-0 opacity-5 lg:rounded-xl -z-10"></div>
         <div className="flex flex-col items-center lg:justify-between w-full p-2 pb-0">
           <div className="flex items-center gap-5 lg:w-full mb-2 lg:px-3 lg:py-2 rounded-xl lg:bg-white lg:dark:bg-base-dark lg:border lg:border-gray-200 lg:dark:border-base-full-dark">
-            <a href="/recursos" className="h-10">
+            <Link href="/recursos" className="h-10">
               <Button variant="flat" color="danger" isIconOnly size="md">
                 <BackIcon className="size-7" />
               </Button>
-            </a>
+            </Link>
             <h3 className="hidden lg:block font-medium uppercase">Recursos</h3>
           </div>
           <div className="flex flex-col w-full">
             <ul>
               {asideLinks.map((link, index) => (
                 <li key={index} className="w-fit lg:w-full">
-                  <a href={link.link}>
+                  <Link href={link.link}>
                     <Button
                       disableRipple
                       fullWidth
@@ -96,7 +97,7 @@ const ResourceTabs = () => {
                         {link.name}
                       </span>
                     </Button>
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

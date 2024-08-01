@@ -7,6 +7,7 @@ import Section from "./section";
 
 import { $$ } from "@/lib/dom-selector";
 import Image from "next/image";
+import Link from "next/link";
 
 const Landing = () => {
   useEffect(() => {
@@ -70,7 +71,7 @@ const Landing = () => {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row">
-            <a
+            <Link
               href="/signup"
               type="button"
               aria-label="Registrar usuario"
@@ -97,7 +98,7 @@ const Landing = () => {
                   strokeLinecap="round"
                 ></path>
               </svg>
-            </a>
+            </Link>
           </div>
           <div className="h-48"></div>
         </div>
@@ -226,22 +227,22 @@ const Landing = () => {
                 </h2>
               </div>
               <div className="flex flex-col items-center justify-center w-full sm:w-96 mx-auto gap-6 text-center">
-                <a
+                <Link
                   type="button"
                   aria-label="Autenticar usuario"
                   className="relative inline-flex items-center justify-center overflow-hidden w-full h-14 px-4 sm:px-8 font-medium text-lg rounded-full bg-light-gradient hover:shadow-[0_8px_8px_rgba(0,0,0,0.2)] active:scale-[.98] active:transition-none active:shadow-none active:brightness-90 text-white transition"
                   href="/login"
                 >
                   Unirse a Essentia
-                </a>
-                <a
+                </Link>
+                <Link
                   type="button"
                   aria-label="Autenticar usuario"
                   className="relative inline-flex items-center justify-center overflow-hidden w-full h-14 px-4 sm:px-8 font-medium text-lg rounded-full bg-base-dark-40 hover:shadow-[0_8px_8px_rgba(0,0,0,0.2)] active:scale-[.98] active:transition-none active:shadow-none active:brightness-90 text-white transition"
                   href=""
                 >
                   Echar vistazo a Essentia Plus
-                </a>
+                </Link>
               </div>
             </div>
           </section>

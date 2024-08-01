@@ -3,6 +3,7 @@ import { Button, Tooltip, useDisclosure } from "@nextui-org/react";
 import { ChatIcon, DeleteIcon, NewIcon, SidebarFillIcon } from "../icons/icons";
 
 import DeleteChatModal from "./chat-options-menu";
+import Link from "next/link";
 
 interface ChatSession {
   sessionId: string;
@@ -75,13 +76,13 @@ const ChatList: React.FC<ChatListProps> = ({
 
         <div className="relative flex flex-col inner-scrollbar size-full gap-1.5 overflow-y-auto">
           <div className="mb-2">
-            <a
+            <Link
               className="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium font-motivasans focus-visible:outline-none border border-gray-200 dark:border-base-full-dark hover:text-base-color dark:hover:text-white py-2 h-10 w-full justify-start bg-gray-50 px-4 shadow-none transition-colors hover:bg-gray-100 dark:bg-base-full-dark-20 dark:hover:bg-base-full-dark"
               href="/essentia-ai"
             >
               <NewIcon className="size-4 -translate-x-2 stroke-2" />
               Nuevo chat
-            </a>
+            </Link>
           </div>
           {chatHistory.length > 0 ? (
             chatHistory.map((session) => (

@@ -1,6 +1,7 @@
 import { Image as UIImage } from "@nextui-org/react";
 import { ArrowRightIcon } from "../icons/icons";
 import Image from "next/image";
+import Link from "next/link";
 
 const NewCard = () => {
   return (
@@ -24,13 +25,13 @@ const NewCard = () => {
             </h4>
           </div>
           <div className="flex items-center justify-end w-full overflow-hidden p-2 z-10">
-            <a
+            <Link
               className="group flex flex-row items-center justify-center h-9 w-full px-3 bg-bittersweet-400 dark:bg-cerise-red-600 rounded-xl bottom-1 shadow-small transition hover:brightness-90"
               href="/noticias"
             >
               <span className="text-white">Ir a noticias</span>
               <ArrowRightIcon className="rtl:rotate-180 size-3.5 ms-2 text-white group-hover:ms-4 transition-[margin,_transform]" />
-            </a>
+            </Link>
           </div>
         </div>
       </div>

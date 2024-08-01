@@ -6,6 +6,7 @@ import MenuButton from "./menu-button";
 import MobileMenu from "./mobile-menu";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 const MobileHeaderTop = ({ session }: any) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -57,7 +58,7 @@ const MobileHeaderTop = ({ session }: any) => {
           wrapper: "h-14",
         }}
       >
-        <a
+        <Link
           className="relative size-8 active:scale-95 transition-transform rounded-full"
           href="/"
           aria-label="Página de inicio"
@@ -76,7 +77,7 @@ const MobileHeaderTop = ({ session }: any) => {
             src="/e-logomark-on-dark.webp"
             alt="Logo de Essentia"
           />
-        </a>
+        </Link>
         <MenuButton
           sessionImage={session?.user?.image}
           isOpen={isOpen}

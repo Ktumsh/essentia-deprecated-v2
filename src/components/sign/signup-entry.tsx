@@ -416,14 +416,14 @@ const SignUpEntry = () => {
             <div className="flex items-center justify-center text-[13px] text-center self-center mt-2 text-base-color-dark sm:text-base-color-h">
               <p>
                 ¿Ya tienes una cuenta?{" "}
-                <a
+                <Link
                   id="login-base-color"
                   className="login-base-color font-bold sm:font-medium text-orient-600 sm:text-orient-700"
                   href="/login"
                   aria-label="Inicia sesión"
                 >
                   Inicia sesión
-                </a>
+                </Link>
               </p>
             </div>
           </form>

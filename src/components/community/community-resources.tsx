@@ -1,4 +1,5 @@
 import { Image } from "@nextui-org/react";
+import Link from "next/link";
 
 const CommunityResources = () => {
   const resources = [
@@ -94,12 +95,12 @@ const CommunityResources = () => {
               <div className="px-4 pb-4">
                 <h3 className="text-xl font-bold mb-2">{resource.title}</h3>
                 <p className="mb-2">{resource.description}</p>
-                <a
+                <Link
                   href={resource.link}
                   className="text-blue-500 hover:text-blue-700"
                 >
                   Más información
-                </a>
+                </Link>
               </div>
             </div>
           ))}

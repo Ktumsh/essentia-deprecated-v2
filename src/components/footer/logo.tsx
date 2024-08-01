@@ -1,9 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const Logo = () => {
   return (
     <div className="flex col-span-2 md:col-span-1 justify-center md:justify-start justify-items-start mb-6">
-      <a title="Essentia Logo" href="/" aria-label="Essentia Logo">
+      <Link title="Essentia Logo" href="/" aria-label="Essentia Logo">
         <div className="w-28 h-auto">
           <Image
             className="size-auto dark:hidden"
@@ -20,7 +21,7 @@ const Logo = () => {
             alt="Essentia Logo"
           />
         </div>
-      </a>
+      </Link>
     </div>
   );
 };

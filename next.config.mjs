@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
+    remotePatterns: [
       "i.blogs.es",
       "imagenes.muyinteresante.com",
       "www.elcalbucano.cl",

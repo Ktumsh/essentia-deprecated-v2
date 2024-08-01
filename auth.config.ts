@@ -1,10 +1,8 @@
 import { NextAuthOptions } from "next-auth";
-
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import TwitterProvider from "next-auth/providers/twitter";
 import CredentialsProvider from "next-auth/providers/credentials";
-
 import { z } from "zod";
 import { kv } from "@vercel/kv";
 import { getStringFromBuffer } from "@/lib/utils";
@@ -37,7 +35,7 @@ export const authConfig: NextAuthOptions = {
     CredentialsProvider({
       name: "credentials",
       credentials: {
-        identifier: { label: "Username or Email", type: "text" },
+        email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
@@ -45,7 +43,7 @@ export const authConfig: NextAuthOptions = {
 
         const parsedCredentials = z
           .object({
-            identifier: z.string(),
+            email: z.string().email(),
             password: z.string().min(6),
           })
           .safeParse(credentials);
@@ -55,12 +53,8 @@ export const authConfig: NextAuthOptions = {
           return null;
         }
 
-        const { identifier, password } = parsedCredentials.data;
-        let user = await kv.hgetall(`user:${identifier}`);
-        if (!user) {
-          user = await kv.hgetall(`user:${identifier}`);
-        }
-
+        const { email, password } = parsedCredentials.data;
+        let user = await kv.hgetall(`user:${email}`);
         if (!user) {
           console.log("User not found");
           return null;
@@ -82,6 +76,7 @@ export const authConfig: NextAuthOptions = {
         return {
           id: user.id as string,
           name: user.name as string,
+          lastname: user.lastname as string,
           email: user.email as string,
           username: user.username as string,
           birthdate: user.birthdate as string,
@@ -99,6 +94,7 @@ export const authConfig: NextAuthOptions = {
         token.id = user.id;
         token.username = user.username;
         token.name = user.name;
+        token.lastname = user.lastname;
         token.birthdate = user.birthdate;
       }
       if (account?.provider === "facebook" && account.accessToken) {
@@ -131,6 +127,7 @@ export const authConfig: NextAuthOptions = {
         session.user.id = token.id as string;
         session.user.username = token.username as string;
         session.user.name = token.name as string;
+        session.user.lastname = token.lastname as string;
         session.user.birthdate = token.birthdate as string;
       }
       return session;

@@ -1,205 +1,388 @@
 "use client";
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  BaloonIcon,
   EyeIcon,
-  LockIcon,
   MailIcon,
   EyeOffIcon,
+  CalendarIcon,
+  ArrowRightV2Icon,
   UserIcon,
 } from "../icons/icons";
 import SignInWith from "./signin-with";
 import { signup } from "@/app/signup/actions";
+import { signIn } from "next-auth/react";
+import {
+  Button,
+  DateInput,
+  DateValue,
+  Divider,
+  Input,
+} from "@nextui-org/react";
+import Link from "next/link";
+import {
+  validateEmail,
+  validatePassword,
+  validateBirthdate,
+} from "@/lib/validators/validators";
+import { ErrorMessages } from "@/lib/enums/error-message";
 
 const SignUpEntry = () => {
+  const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
-  const [birthdate, setBirthdate] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [lastname, setLastname] = useState("");
+  const [birthdate, setBirthdate] = useState<DateValue | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [emailExists, setEmailExists] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({
+    email: "",
+    password: "",
+    username: "",
+    name: "",
+    lastname: "",
+    birthdate: "",
+  });
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    const errors = {
+      email: !validateEmail(email) ? ErrorMessages.REQUIRED_EMAIL : "",
+      password:
+        password.trim() === ""
+          ? ErrorMessages.REQUIRED_PASSWORD
+          : !validatePassword(password)
+            ? ErrorMessages.INVALID_PASSWORD
+            : "",
+      username: username.trim() === "" ? ErrorMessages.REQUIRED_USERNAME : "",
+      name: name.trim() === "" ? ErrorMessages.REQUIRED_NAME : "",
+      lastname: lastname.trim() === "" ? ErrorMessages.REQUIRED_LASTNAME : "",
+      birthdate: !birthdate
+        ? ErrorMessages.REQUIRED_BIRTHDATE
+        : !validateBirthdate(birthdate)
+          ? ErrorMessages.INVALID_BIRTHDATE
+          : "",
+    };
+
+    if (Object.values(errors).some((error) => error)) {
+      setFieldErrors(errors);
+      return;
+    }
+
+    setFieldErrors({
+      email: "",
+      password: "",
+      username: "",
+      name: "",
+      lastname: "",
+      birthdate: "",
+    });
 
     const formData = new FormData();
     formData.append("email", email);
     formData.append("password", password);
     formData.append("username", username);
     formData.append("name", name);
-    formData.append("birthdate", birthdate);
+    formData.append("lastname", lastname);
+    formData.append("birthdate", birthdate ? birthdate.toString() : "");
 
     try {
-      const result = await signup(formData); // Llama a la acción signup
-      if (result?.ok) {
-        router.push("/login");
+      const result = await signup(formData);
+      if (result.success) {
+        const signInResult = await signIn("credentials", {
+          email,
+          password,
+          redirect: false,
+        });
+
+        if (signInResult && !signInResult.error) {
+          router.push("/login");
+        } else {
+          throw new Error("No se pudo iniciar sesión después del registro");
+        }
       } else {
-        throw new Error("Failed to create account");
+        throw new Error(result.error || "Error al crear la cuenta");
       }
     } catch (error) {
       if (error instanceof Error) {
-        alert(`An error occurred: ${error.message}`);
+        alert(`Ha ocurrido un error: ${error.message}`);
       } else {
-        alert("An unknown error occurred");
+        alert("Ha ocurrido un error desconocido");
       }
     }
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword((prevState) => !prevState);
+  const handleEmailSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    if (!validateEmail(email)) {
+      setFieldErrors((prevErrors) => ({
+        ...prevErrors,
+        email: ErrorMessages.REQUIRED_EMAIL,
+      }));
+      return;
+    }
+
+    setFieldErrors((prevErrors) => ({ ...prevErrors, email: "" }));
+
+    try {
+      const response = await fetch(`/api/check-email?email=${email}`);
+      const data = await response.json();
+
+      if (data.exists) {
+        setEmailExists(true);
+        setFieldErrors((prevErrors) => ({
+          ...prevErrors,
+          email: ErrorMessages.EMAIL_EXISTS,
+        }));
+      } else {
+        setEmailExists(false);
+        setStep(2);
+      }
+    } catch (error) {
+      alert("Error verificando el correo electrónico");
+    }
   };
+
+  const toggleVisibility = () => setIsVisible(!isVisible);
+
+  const handleChange =
+    (setter: (value: string) => void, field: string) => (value: string) => {
+      setter(value);
+      setFieldErrors((prevErrors) => ({ ...prevErrors, [field]: "" }));
+    };
 
   return (
     <div className="flex relative justify-center items-center p-8 mb-9 size-full sm:w-[500px] rounded-xl bg-transparent sm:bg-white text-left sm:shadow-md shadow-black/20 font-normal text-base-color-m overflow-hidden">
       <div className="form-box register flex flex-col size-full">
-        <form
-          className="flex flex-col items-start justify-center size-full select-none"
-          onSubmit={handleSubmit}
-        >
-          <div className="flex relative w-full h-10 mb-6 rounded bg-gray-200">
-            <span className="flex justify-center items-center h-full pl-2">
-              <MailIcon className="size-5" />
-            </span>
-            <input
-              required
+        {step === 1 ? (
+          <form
+            className="flex flex-col items-start justify-center size-full select-none"
+            onSubmit={handleEmailSubmit}
+          >
+            <Input
               name="email"
               aria-label="Correo electrónico"
               type="text"
-              className="z-10 input size-full bg-transparent border-none outline-none text-[13px] font-semibold focus:ring-0"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              label="Correo electrónico"
+              placeholder="Ingresa tu correo electrónico"
+              errorMessage={fieldErrors.email}
+              isInvalid={!!fieldErrors.email}
+              color={fieldErrors.email ? "danger" : "default"}
+              onValueChange={handleChange(setEmail, "email")}
+              endContent={<MailIcon className="size-6" />}
+              classNames={{
+                input: "placeholder:text-base-color-d",
+              }}
             />
-            <label className="absolute top-1/2 left-9 transform -translate-y-1/2 text-[13px] transition-all duration-300">
-              Correo electrónico
-            </label>
-          </div>
-          <div className="flex relative w-full h-10 mb-6 rounded bg-gray-200">
-            <span className="flex justify-center items-center h-full pl-2">
-              <UserIcon className="size-5" />
-            </span>
-            <input
-              required
-              name="username"
-              aria-label="Nombre de usuario"
-              type="text"
-              className="peer z-10 input size-full bg-transparent border-none outline-none text-[13px] font-semibold focus:ring-0"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <label className="peer-valid: absolute top-1/2 left-9 transform -translate-y-1/2 text-[13px] transition-all duration-300">
-              Nombre de usuario
-            </label>
-          </div>
-          <div className="flex relative w-full h-10 mb-6 rounded bg-gray-200">
-            <span className="flex justify-center items-center h-full pl-2">
-              <UserIcon className="size-5" />
-            </span>
-            <input
-              required
-              name="name"
-              aria-label="Nombre completo"
-              type="text"
-              className="z-10 input size-full bg-transparent border-none outline-none text-[13px] font-semibold focus:ring-0"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <label className="absolute top-1/2 left-9 transform -translate-y-1/2 text-[13px] transition-all duration-300">
-              Nombre completo
-            </label>
-          </div>
-          <div className="relative size-full mb-6">
-            <div className="flex items-center whitespace-nowrap text-[13px] transition-all duration-300 text-gray-200 sm:text-inherit">
-              <BaloonIcon className="size-5 mr-2" />
-              Fecha de cumpleaños
+            <Button
+              type="submit"
+              radius="full"
+              fullWidth
+              className="bg-light-gradient text-base text-white mt-4"
+            >
+              Continuar
+            </Button>
+            <div className="flex items-center justify-center w-full px-3 my-4">
+              <Divider className="flex-1 bg-gray-200" />
+              <span className="text-xs text-center mx-2 text-nowrap text-white sm:text-inherit">
+                o
+              </span>
+              <Divider className="flex-1 bg-gray-200" />
             </div>
-            <input
-              aria-label="Fecha de nacimiento"
-              type="date"
-              placeholder="01/01/1980"
-              className="z-10 w-full h-10 px-2 outline-none text-[13px] placeholder:font-normal placeholder:text-base-color-m font-semibold rounded bg-gray-200 focus:ring-0 border-none"
-              value={birthdate}
-              onChange={(e) => setBirthdate(e.target.value)}
-            />
-          </div>
-          <div className="flex relative w-full h-10 mb-6 rounded bg-gray-200">
-            <span className="flex justify-center items-center h-full pl-2">
-              <LockIcon className="size-5" />
-            </span>
-            <input
-              required
-              name="password"
-              aria-label="Contraseña"
-              type={showPassword ? "text" : "password"}
-              className="z-10 input size-full bg-transparent border-none outline-none text-[13px] font-semibold focus:ring-0"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <label className="absolute top-1/2 left-9 transform -translate-y-1/2 text-[13px] transition-all duration-300">
-              Contraseña
-            </label>
-            <button
-              type="button"
-              className="flex justify-center items-center h-full px-2 cursor-pointer hover:text-bittersweet-400 bottom-2"
-              onClick={togglePasswordVisibility}
-            >
-              {showPassword ? (
-                <EyeIcon id="eye" className="size-5" />
-              ) : (
-                <EyeOffIcon id="offEye" className="size-5" />
-              )}
-            </button>
-          </div>
-          <div className="flex mb-6 relative w-full text-[13px] leading-snug select-text text-gray-200 sm:text-inherit">
-            <p>
-              Al registrarte, estás aceptando los{" "}
-              <a
-                className="hover:underline underline-offset-2 font-bold text-white sm:text-orient-700 sm:font-medium"
-                href="#"
-                aria-label="Términos y condiciones de uso"
-              >
-                Términos y condiciones de uso{" "}
-              </a>
-              y la{" "}
-              <a
-                className="hover:underline underline-offset-2 font-bold text-white sm:text-orient-700 sm:font-medium"
-                href="#"
-                aria-label="Política de privacidad"
-              >
-                Política de privacidad
-              </a>
-            </p>
-          </div>
-          <button
-            type="submit"
-            className="flex justify-center items-center h-10 w-full text-base rounded-full bg-light-gradient hover:brightness-90 active:scale-[.98] text-white shadow-md transition-all"
+            <SignInWith />
+            <div className="flex items-center justify-center text-[13px] text-center self-center mt-2 text-gray-200 sm:text-inherit">
+              <p>
+                ¿Ya tienes una cuenta?{" "}
+                <Link
+                  className="font-bold sm:font-medium text-orient-600 sm:text-orient-700"
+                  href="/login"
+                  aria-label="Inicia sesión"
+                >
+                  Inicia sesión
+                </Link>
+              </p>
+            </div>
+          </form>
+        ) : (
+          <form
+            className="flex flex-col items-start justify-center size-full select-none"
+            onSubmit={handleSubmit}
           >
-            Crear cuenta
-          </button>
-          <div className="flex flex-row items-center justify-center w-full px-3 my-4">
-            <hr className="flex-1 h-px border-gray-200" />
-            <span className="text-xs text-center mx-2 text-nowrap text-white sm:text-inherit">
-              o
-            </span>
-            <hr className="flex-1 h-px border-gray-200" />
-          </div>
-        </form>
-        <SignInWith />
-        <div className="flex items-center justify-center text-[13px] text-center self-center mt-2 text-gray-200 sm:text-inherit">
-          <p>
-            ¿Ya tienes una cuenta?{" "}
-            <a
-              id="login-base-color"
-              className="login-base-color font-bold sm:font-medium text-orient-600 sm:text-orient-700"
-              href="/login"
-              aria-label="Inicia sesión"
+            <div className="flex flex-col gap-5">
+              <div className="flex gap-5">
+                <Button
+                  isIconOnly
+                  onPress={() => setStep(1)}
+                  className="bg-transparent sm:bg-gray-100"
+                >
+                  <ArrowRightV2Icon className="size-6 rotate-180 text-white sm:text-base-color-h" />
+                </Button>
+                <div className="w-full text-sm text-base-color-dark sm:text-base-color-h">
+                  <p>
+                    Parece que no tienes una cuenta. Vamos a crear una nueva
+                    cuenta para{" "}
+                    <span className="font-bold text-orient-600 sm:text-orient-700 sm:font-medium">
+                      {email}
+                    </span>
+                  </p>
+                </div>
+              </div>
+              <div className="flex w-full gap-5">
+                <Input
+                  isRequired
+                  name="name"
+                  aria-label="Nombre"
+                  type="text"
+                  value={name}
+                  label="Nombre"
+                  placeholder="Ingresa tu nombre"
+                  errorMessage={fieldErrors.name}
+                  isInvalid={!!fieldErrors.name}
+                  color={fieldErrors.name ? "danger" : "default"}
+                  onValueChange={handleChange(setName, "name")}
+                  classNames={{
+                    input: "placeholder:text-base-color-d",
+                  }}
+                />
+                <Input
+                  isRequired
+                  name="lastname"
+                  aria-label="Apellido"
+                  type="text"
+                  value={lastname}
+                  label="Apellido"
+                  placeholder="Ingresa tu apellido"
+                  errorMessage={fieldErrors.lastname}
+                  isInvalid={!!fieldErrors.lastname}
+                  color={fieldErrors.lastname ? "danger" : "default"}
+                  onValueChange={handleChange(setLastname, "lastname")}
+                  classNames={{
+                    input: "placeholder:text-base-color-d",
+                  }}
+                />
+              </div>
+              <Input
+                isRequired
+                name="username"
+                aria-label="Nombre de usuario"
+                type="text"
+                label="Nombre de usuario"
+                placeholder="Ingresa tu nombre de usuario"
+                description="Tu nombre de usuario es el que aparecerá a la vista de todos en tu perfil."
+                value={username}
+                errorMessage={fieldErrors.username}
+                isInvalid={!!fieldErrors.username}
+                color={fieldErrors.username ? "danger" : "default"}
+                onValueChange={handleChange(setUsername, "username")}
+                endContent={<UserIcon className="size-6" />}
+                classNames={{
+                  input: "placeholder:text-base-color-d",
+                  description: "text-base-color-dark sm:text-base-color-m",
+                }}
+              />
+              <DateInput
+                isRequired
+                label="Fecha de nacimiento"
+                aria-label="Fecha de nacimiento"
+                description="Este es mi cumpleaños."
+                value={birthdate}
+                onChange={(date) => {
+                  setBirthdate(date);
+                  setFieldErrors((prevErrors) => ({
+                    ...prevErrors,
+                    birthdate: "",
+                  }));
+                }}
+                endContent={
+                  <CalendarIcon className="size-6 text-base-color-m" />
+                }
+                errorMessage={fieldErrors.birthdate}
+                isInvalid={!!fieldErrors.birthdate}
+                color={fieldErrors.birthdate ? "danger" : "default"}
+                classNames={{
+                  description: "text-base-color-dark sm:text-base-color-m",
+                }}
+              />
+              <Input
+                isRequired
+                name="password"
+                aria-label="Contraseña"
+                type={isVisible ? "text" : "password"}
+                value={password}
+                label="Contraseña"
+                placeholder="Ingresa tu contraseña"
+                errorMessage={fieldErrors.password}
+                isInvalid={!!fieldErrors.password}
+                color={fieldErrors.password ? "danger" : "default"}
+                onValueChange={handleChange(setPassword, "password")}
+                endContent={
+                  <button
+                    type="button"
+                    onClick={toggleVisibility}
+                    aria-label="Alternar visibilidad de la contraseña"
+                  >
+                    {isVisible ? (
+                      <EyeOffIcon className="size-6" />
+                    ) : (
+                      <EyeIcon className="size-6" />
+                    )}
+                  </button>
+                }
+                classNames={{
+                  input: "placeholder:text-base-color-d",
+                }}
+              />
+              <div className="flex mb-6 relative w-full text-[13px] leading-snug select-text text-base-color-dark sm:text-base-color-h">
+                <p>
+                  Al registrarte, estás aceptando los{" "}
+                  <Link
+                    className="hover:underline underline-offset-2 font-bold text-orient-600 sm:text-orient-700 sm:font-medium"
+                    href="#"
+                    aria-label="Términos y condiciones de uso"
+                  >
+                    Términos y condiciones de uso{" "}
+                  </Link>
+                  y la{" "}
+                  <Link
+                    className="hover:underline underline-offset-2 font-bold text-orient-600 sm:text-orient-700 sm:font-medium"
+                    href="#"
+                    aria-label="Política de privacidad"
+                  >
+                    Política de privacidad
+                  </Link>
+                </p>
+              </div>
+            </div>
+            <Button
+              type="submit"
+              radius="full"
+              fullWidth
+              className="bg-light-gradient text-base text-white"
             >
-              Inicia sesión
-            </a>
-          </p>
-        </div>
+              Crear cuenta
+            </Button>
+            <div className="flex items-center justify-center text-[13px] text-center self-center mt-2 text-base-color-dark sm:text-base-color-h">
+              <p>
+                ¿Ya tienes una cuenta?{" "}
+                <a
+                  id="login-base-color"
+                  className="login-base-color font-bold sm:font-medium text-orient-600 sm:text-orient-700"
+                  href="/login"
+                  aria-label="Inicia sesión"
+                >
+                  Inicia sesión
+                </a>
+              </p>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );

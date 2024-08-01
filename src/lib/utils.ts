@@ -83,15 +83,6 @@ export const getStringFromBuffer = (buffer: ArrayBuffer) =>
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
 
-export enum ResultCode {
-  InvalidCredentials = "INVALID_CREDENTIALS",
-  InvalidSubmission = "INVALID_SUBMISSION",
-  UserAlreadyExists = "USER_ALREADY_EXISTS",
-  UnknownError = "UNKNOWN_ERROR",
-  UserCreated = "USER_CREATED",
-  UserLoggedIn = "USER_LOGGED_IN",
-}
-
 export const usernameOrEmail = (session: any) => {
   const username = session?.user?.username
     ? `@${session.user.username}`

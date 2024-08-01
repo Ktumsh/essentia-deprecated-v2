@@ -1,100 +1,157 @@
 "use client";
 
-import { useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { EyeIcon, LockIcon, EyeOffIcon, UserIcon } from "../icons/icons";
+import { EyeIcon, MailIcon, EyeOffIcon } from "../icons/icons";
 import SignInWith from "./signin-with";
+import { Button, Checkbox, Input } from "@nextui-org/react";
+import Link from "next/link";
+import { ErrorMessages } from "@/lib/enums/error-message";
+import { validateEmail } from "@/lib/validators/validators";
 
 const LoginEntry = () => {
-  const [identifier, setIdentifier] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isSelected, setIsSelected] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({
+    email: "",
+    password: "",
+  });
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("rememberedEmail");
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setIsSelected(true);
+    }
+  }, []);
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    const errors = {
+      email: !validateEmail(email) ? ErrorMessages.REQUIRED_EMAIL : "",
+      password: password.trim() === "" ? ErrorMessages.REQUIRED_PASSWORD : "",
+    };
+
+    if (Object.values(errors).some((error) => error)) {
+      setFieldErrors(errors);
+      return;
+    }
+
+    setFieldErrors({ email: "", password: "" });
+
     const result = await signIn("credentials", {
       redirect: false,
-      identifier,
+      email,
       password,
     });
 
     if (result?.error) {
-      alert(result.error);
+      setFieldErrors((prevErrors) => ({
+        ...prevErrors,
+        email: ErrorMessages.INVALID_CREDENTIALS,
+      }));
     } else {
+      if (isSelected) {
+        localStorage.setItem("rememberedEmail", email);
+      } else {
+        localStorage.removeItem("rememberedEmail");
+      }
       router.push("/");
     }
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword((prevState) => !prevState);
-  };
+  const toggleVisibility = () => setIsVisible(!isVisible);
+
+  const handleChange =
+    (setter: (value: string) => void, field: string) => (value: string) => {
+      setter(value);
+      setFieldErrors((prevErrors) => ({ ...prevErrors, [field]: "" }));
+    };
 
   return (
     <div className="flex flex-col relative justify-center items-center p-8 size-full sm:min-w-[500px] rounded-xl bg-transparent sm:bg-white text-left sm:shadow-md shadow-black/20 font-normal text-base-color-m overflow-hidden">
       <form
-        className="flex flex-col items-start justify-center size-full gap-6 mb-4 select-none"
+        className="flex flex-col items-start justify-center size-full gap-5 mb-4 select-none"
         onSubmit={handleSubmit}
       >
-        <div className="flex relative w-full h-10 rounded bg-gray-200">
-          <span className="flex justify-center items-center h-full pl-2">
-            <UserIcon className="size-5" />
-          </span>
-          <input
-            name="identifier"
-            aria-label="Usuario o correo electrónico"
-            type="text"
-            className="z-10 input size-full bg-transparent border-none outline-none text-[13px] font-semibold focus:ring-0"
-            required
-            value={identifier}
-            onChange={(e) => setIdentifier(e.target.value)}
-          />
-          <label className="absolute top-1/2 left-9 transform -translate-y-1/2 text-[13px] transition-all duration-300">
-            Usuario o correo electrónico
-          </label>
-        </div>
+        <Input
+          name="email"
+          aria-label="Correo electrónico"
+          type="text"
+          value={email}
+          label="Correo electrónico"
+          placeholder="Ingresa tu correo electrónico"
+          errorMessage={fieldErrors.email}
+          isInvalid={!!fieldErrors.email}
+          color={fieldErrors.email ? "danger" : "default"}
+          onValueChange={handleChange(setEmail, "email")}
+          endContent={<MailIcon className="size-6" />}
+          classNames={{
+            input: "placeholder:text-base-color-d",
+          }}
+        />
+        <Input
+          name="password"
+          aria-label="Contraseña"
+          type={isVisible ? "text" : "password"}
+          value={password}
+          label="Contraseña"
+          placeholder="Ingresa tu contraseña"
+          errorMessage={fieldErrors.password}
+          isInvalid={!!fieldErrors.password}
+          color={fieldErrors.password ? "danger" : "default"}
+          onValueChange={handleChange(setPassword, "password")}
+          endContent={
+            <button
+              type="button"
+              onClick={toggleVisibility}
+              aria-label="Alternar visibilidad de la contraseña"
+            >
+              {isVisible ? (
+                <EyeOffIcon className="size-6" />
+              ) : (
+                <EyeIcon className="size-6" />
+              )}
+            </button>
+          }
+          classNames={{
+            input: "placeholder:text-base-color-d",
+          }}
+        />
 
-        <div className="flex relative w-full h-10 rounded bg-gray-200">
-          <span className="flex justify-center items-center h-full pl-2">
-            <LockIcon className="size-5" />
-          </span>
-          <input
-            name="password"
-            aria-label="Contraseña"
-            type={showPassword ? "text" : "password"}
-            className="z-10 input size-full bg-transparent border-none outline-none text-[13px] font-semibold focus:ring-0"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <label className="absolute top-1/2 left-9 transform -translate-y-1/2 text-[13px] transition-all duration-300">
-            Contraseña
-          </label>
-          <button
-            type="button"
-            className="flex justify-center items-center h-full px-2 cursor-pointer hover:text-bittersweet-400 bottom-2"
-            onClick={togglePasswordVisibility}
+        <div className="flex w-full mt-[-15px] mx-0 justify-between text-[13px] text-gray-200 sm:text-base-color-h">
+          <Checkbox
+            isSelected={isSelected}
+            onValueChange={setIsSelected}
+            size="sm"
+            color="danger"
+            classNames={{
+              label: "text-[13px] text-inherit",
+            }}
           >
-            {showPassword ? (
-              <EyeIcon id="eye" className="size-5" />
-            ) : (
-              <EyeOffIcon id="offEye" className="size-5" />
-            )}
-          </button>
-        </div>
-        <div className="flex w-full mt-[-15px] mx-0 justify-between text-[13px] text-gray-200 sm:text-inherit">
-          <a
+            Recordarme
+          </Checkbox>
+          <Link
             href="#"
             className="hover:underline underline-offset-2"
             aria-label="¿Olvidaste tu contraseña?"
           >
             ¿Olvidaste tu contraseña?
-          </a>
+          </Link>
         </div>
-        <button className="flex justify-center items-center h-10 w-full text-base rounded-full bg-light-gradient hover:brightness-90 active:scale-[.98] text-white shadow-md transition-all">
+        <Button
+          type="submit"
+          radius="full"
+          fullWidth
+          className="bg-light-gradient text-base text-white"
+        >
           Iniciar sesión
-        </button>
+        </Button>
       </form>
       <div className="flex flex-row items-center justify-center w-full px-3 my-4">
         <hr className="flex-1 h-px border-gray-200" />
@@ -104,7 +161,7 @@ const LoginEntry = () => {
         <hr className="flex-1 h-px border-gray-200" />
       </div>
       <SignInWith />
-      <div className="flex items-center justify-center text-[13px] text-center self-center mt-2 text-gray-200 sm:text-inherit">
+      <div className="flex items-center justify-center text-[13px] text-center self-center mt-2 text-gray-200 sm:text-base-color-h">
         <p>
           ¿No tienes una cuenta?{" "}
           <a

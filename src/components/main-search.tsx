@@ -177,11 +177,32 @@ const MainSearch: FC = () => {
     (item: SearchResult, index: number, isRecent = false) => {
       const isLvl1 = item.type === "lvl1";
       const mainIcon = isRecent ? (
-        <SearchIcon className={cn(searchStyles.iconColor)} />
+        <SearchIcon
+          className={cn(
+            searchStyles.iconColor,
+            "group-data-[hover=true]:text-white",
+            "group-data-[focus=true]:text-white",
+            "group-data-[active=true]:text-white"
+          )}
+        />
       ) : isLvl1 && item.icon ? (
-        <item.icon className={cn(searchStyles.iconColor)} />
+        <item.icon
+          className={cn(
+            searchStyles.iconColor,
+            "group-data-[hover=true]:text-white",
+            "group-data-[focus=true]:text-white",
+            "group-data-[active=true]:text-white"
+          )}
+        />
       ) : (
-        <HashFillIcon className={cn(searchStyles.iconColor)} />
+        <HashFillIcon
+          className={cn(
+            searchStyles.iconColor,
+            "group-data-[hover=true]:text-white",
+            "group-data-[focus=true]:text-white",
+            "group-data-[active=true]:text-white"
+          )}
+        />
       );
 
       return (
@@ -204,13 +225,20 @@ const MainSearch: FC = () => {
             <Chevron
               className={cn(
                 "size-5 rotate-180",
-                searchStyles.textHoverFocusActive
+                "group-data-[hover=true]:text-white",
+                "group-data-[focus=true]:text-white",
+                "group-data-[active=true]:text-white"
               )}
             />
           }
           className={cn(
             searchStyles.buttonCommon,
-            searchStyles.buttonHoverFocusActive,
+            "data-[hover=true]:bg-bittersweet-400",
+            "dark:data-[hover=true]:bg-cerise-red-600",
+            "data-[focus=true]:bg-bittersweet-400",
+            "dark:data-[focus=true]:bg-cerise-red-600",
+            "data-[active=true]:bg-bittersweet-400",
+            "dark:data-[active=true]:bg-cerise-red-600",
             searchStyles.buttonTextColor
           )}
           onPress={() => handleSearchSelect(item)}
@@ -220,7 +248,9 @@ const MainSearch: FC = () => {
               <span
                 className={cn(
                   "text-xs select-none flex items-center",
-                  searchStyles.textHoverFocusActive
+                  "group-data-[hover=true]:text-white",
+                  "group-data-[focus=true]:text-white",
+                  "group-data-[active=true]:text-white"
                 )}
               >
                 {item.hierarchy?.lvl1}
@@ -230,7 +260,9 @@ const MainSearch: FC = () => {
             <p
               className={cn(
                 "truncate text-base-color-h dark:text-base-color-dark-h select-none",
-                searchStyles.textHoverFocusActive
+                "group-data-[hover=true]:text-white",
+                "group-data-[focus=true]:text-white",
+                "group-data-[active=true]:text-white"
               )}
             >
               {item.content}
@@ -271,6 +303,7 @@ const MainSearch: FC = () => {
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
+        scrollBehavior="inside"
         size="xl"
         classNames={{
           backdrop: "z-[101] bg-black/80",
@@ -302,7 +335,13 @@ const MainSearch: FC = () => {
                   onValueChange={handleSearchChange}
                   startContent={<SearchIcon className="size-7 mr-1" />}
                   classNames={{
-                    inputWrapper: cn(searchStyles.inputWrapper),
+                    inputWrapper: cn(
+                      searchStyles.inputWrapper,
+                      "data-[hover=true]:bg-transparent",
+                      "group-data-[focus=true]:bg-transparent",
+                      "group-data-[focus-visible=true]:ring-0",
+                      "group-data-[focus-visible=true]:ring-offset-0"
+                    ),
                     input: cn(searchStyles.input),
                   }}
                 />
@@ -322,7 +361,10 @@ const MainSearch: FC = () => {
               aria-labelledby={id}
               id={id}
               ref={listRef}
-              className={cn(searchStyles.modalContent)}
+              className={cn(
+                searchStyles.modalContent,
+                "max-h-[50vh] md:scrollbar-default custom-scroll v2"
+              )}
             >
               {/* Búsquedas recientes */}
               {searchTerm.length < 1 && recentSearches.length > 0 && (

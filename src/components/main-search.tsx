@@ -307,13 +307,13 @@ const MainSearch: FC = () => {
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
+        hideCloseButton
         scrollBehavior="inside"
         size="xl"
         classNames={{
           backdrop: "z-[101] bg-black/80",
           wrapper: "z-[102]",
-          base: "bg-white dark:bg-base-full-dark border border-gray-200 dark:border-base-dark text-base-color dark:text-base-color-dark",
-          closeButton: "hidden",
+          base: "mx-0 bg-white dark:bg-base-full-dark border border-gray-200 dark:border-base-dark text-base-color dark:text-base-color-dark",
           header: "p-0 border-b border-gray-200 dark:border-base-dark",
         }}
       >
@@ -333,7 +333,7 @@ const MainSearch: FC = () => {
                   aria-labelledby={id}
                   isClearable
                   size="lg"
-                  placeholder="Busca información para sentirte mejor..."
+                  placeholder="Explora nuestros recursos..."
                   value={searchTerm}
                   onKeyDown={onInputKeyDown}
                   onValueChange={handleSearchChange}

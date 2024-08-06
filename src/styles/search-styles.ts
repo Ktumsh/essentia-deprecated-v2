@@ -22,14 +22,7 @@ export const searchStyles = {
   ],
   input: ["placeholder:text-lg"],
   modalHeader: ["flex", "items-center", "w-full", "pl-2", "pr-4"],
-  modalContent: [
-    "relative",
-    "px-4",
-    "my-2",
-    "pb-8",
-    "overflow-y-auto",
-    "scrollbar-hide",
-  ],
+  modalContent: ["px-4", "my-2", "pb-8", "overflow-y-auto", "scrollbar-hide"],
   noResults: [
     "flex",
     "flex-col",

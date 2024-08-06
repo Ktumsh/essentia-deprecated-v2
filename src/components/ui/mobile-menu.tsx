@@ -20,7 +20,7 @@ import {
 } from "@nextui-org/react";
 import { ThemeToggle } from "../theme-toggle";
 import { MOBILE_MENU_CONTENT_ID } from "@/consts/mobile-menu";
-import { cn, getFirstNameAndLastName } from "@/lib/utils";
+import { cn, getFirstNameAndLastName, usernameOrEmail } from "@/lib/utils";
 import { Session } from "next-auth";
 import { siteConfig } from "@/config/site";
 import { useEffect, useState } from "react";
@@ -35,10 +35,16 @@ const MobileMenu = ({ isMenuOpen, session }: Props) => {
   const [currentPath, setCurrentPath] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
-  const normalizeName = getFirstNameAndLastName(session?.user?.name);
-  const hasUsername = session?.user?.username
-    ? `@${session.user.username}`
-    : session?.user?.email;
+  const normalizeName =
+    getFirstNameAndLastName(session?.user?.name) || "Usuario";
+
+  const name = normalizeName;
+
+  const lastname = session?.user?.lastname || "";
+
+  const username = session?.user?.username || normalizeName;
+
+  const hasUsernameOrEmail = usernameOrEmail(session);
 
   const resourceLinks = siteConfig.asideMenuLinks;
 
@@ -66,7 +72,10 @@ const MobileMenu = ({ isMenuOpen, session }: Props) => {
               <div className="flex w-full h-auto py-5 border-b-1 border-gray-200 dark:border-base-dark">
                 <div className="inline-flex flex-col items-start justify-center gap-2">
                   {session?.user?.image ? (
-                    <Link href="#" aria-label="Perfil de usuario">
+                    <Link
+                      href={`/profile/${username}`}
+                      aria-label="Perfil de usuario"
+                    >
                       <Image
                         className="size-8 rounded-full"
                         width={96}
@@ -76,30 +85,27 @@ const MobileMenu = ({ isMenuOpen, session }: Props) => {
                       />
                     </Link>
                   ) : (
-                    <Link
-                      className="relative flex justify-center items-center overflow-hidden align-middle size-8 z-0 rounded-full bg-gradient-to-tr from-pink-500 to-yellow-500 active:brightness-90 active:scale-95 transition-[filter,_transform] duration-100"
-                      href="#"
-                    >
-                      <Avatar
-                        showFallback
-                        src="https://images.unsplash.com/broken"
-                        size="sm"
-                        icon={<AvatarIcon />}
-                        classNames={{
-                          icon: "text-base-color-m size-[80%]",
-                        }}
-                      />
-                    </Link>
+                    <Avatar
+                      as={Link}
+                      href={`/profile/${username}`}
+                      showFallback
+                      src="https://images.unsplash.com/broken"
+                      size="sm"
+                      icon={<AvatarIcon />}
+                      classNames={{
+                        icon: "text-base-color-m dark:text-base-color-dark-m size-[80%]",
+                      }}
+                    />
                   )}
                   <Link
                     className="inline-flex flex-col items-start active:bg-gray-200 dark:active:bg-base-dark transition-colors duration-100"
-                    href="#"
+                    href={`/profile/${username}`}
                   >
                     <span className="font-medium text-inherit transition-none capitalize">
-                      {normalizeName || "Usuario"}
+                      {`${name} ${lastname}`}
                     </span>
                     <span className="text-sm text-base-color-m dark:text-base-color-dark-d transition-none">
-                      {hasUsername}
+                      {hasUsernameOrEmail}
                     </span>
                   </Link>
                 </div>

@@ -4,7 +4,7 @@ import Resources from "./resources";
 const Home = () => {
   return (
     <>
-      <div className="sticky top-0 w-full flex items-stretch justify-center grow lg:px-8 pt-14 shrink">
+      <div className="w-full flex items-stretch justify-center grow lg:px-8 pt-14 shrink">
         <main className="flex flex-col size-full md:min-w-[768px] max-w-5xl py-5 lg:px-5 shrink items-stretch grow">
           <div className="flex flex-row relative w-full gap-2 mb-2">
             <section className="flex flex-col flex-1 w-full">

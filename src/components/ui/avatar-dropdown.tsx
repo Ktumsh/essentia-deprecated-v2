@@ -12,6 +12,7 @@ import Image from "next/image";
 import { getFirstNameAndLastName, usernameOrEmail } from "@/lib/utils";
 
 export default function AvatarDropdown({ session }: any) {
+  const lastname = session?.user?.lastname || "";
   const normalizeName = getFirstNameAndLastName(session?.user?.name);
   const username = session?.user?.username || normalizeName;
   const hasUsernameOrEmail = usernameOrEmail(session);
@@ -60,7 +61,7 @@ export default function AvatarDropdown({ session }: any) {
             className="h-14 gap-2 rounded-xl data-[hover=true]:bg-gray-200 dark:data-[hover=true]:bg-base-dark text-base-color-h dark:text-base-color-dark-m data-[hover=true]:text-base-color-h dark:data-[hover=true]:text-base-color-dark !duration-150"
           >
             <p className="font-medium dark:text-base-color-dark">
-              {normalizeName}
+              {`${normalizeName} ${lastname}`}
             </p>
             <p className="text-xs">{hasUsernameOrEmail}</p>
           </DropdownItem>

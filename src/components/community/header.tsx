@@ -16,6 +16,7 @@ import { GoBackIcon } from "../icons/icons";
 import ProfileDropdown from "./profile-dropdown";
 import Image from "next/image";
 import Link from "next/link";
+import { usernameOrEmail } from "@/lib/utils";
 
 const CommunityHeader = ({ session }: { session: any }) => {
   const router = useRouter();
@@ -35,9 +36,13 @@ const CommunityHeader = ({ session }: { session: any }) => {
   };
 
   const normalizeName = getFirstNameAndLastName(session?.user?.name);
-  const hasUsername = session?.user?.username
-    ? `@${session.user.username}`
-    : session?.user?.email;
+
+  const name = normalizeName;
+
+  const lastname = session?.user?.lastname || "";
+
+  const hasUsernameOrEmail = usernameOrEmail(session);
+
   const profileAvatar = session?.user?.image;
 
   const headerLinks = [
@@ -165,8 +170,8 @@ const CommunityHeader = ({ session }: { session: any }) => {
               </Button>
             </Link>
             <ProfileDropdown
-              name={normalizeName}
-              username={hasUsername}
+              name={`${name} ${lastname}`}
+              username={hasUsernameOrEmail}
               avatar={profileAvatar}
             />
           </div>

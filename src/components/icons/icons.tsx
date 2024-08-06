@@ -363,6 +363,23 @@ const DeleteIcon = (props: IconSvgProps) => {
   );
 };
 
+const DeleteHistoryIcon = (props: IconSvgProps) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <path
+        fill="currentColor"
+        d="M13 19.95q0 .425-.3.738t-.725.312q-1.525-.025-2.9-.488T6.45 19.075q-1.125-.875-1.925-2.05t-1.2-2.6q-.125-.4.1-.75t.625-.475t.75.088t.475.612q.3 1.125.95 2.063t1.525 1.612q.9.7 2 1.063t2.225.362q.425 0 .725.275t.3.675m5.5-1.025L17.1 20.3q-.275.275-.687.288T15.7 20.3q-.275-.275-.275-.7t.275-.7l1.4-1.4l-1.4-1.4q-.275-.275-.275-.7t.275-.7t.7-.275t.7.275l1.4 1.4l1.4-1.4q.275-.275.688-.287t.712.287q.275.275.275.7t-.275.7l-1.375 1.4l1.375 1.4q.275.275.288.688t-.288.712q-.275.275-.7.275t-.7-.275zM12 5q-1.725 0-3.225.8T6.25 8H8q.425 0 .713.288T9 9t-.288.713T8 10H4q-.425 0-.712-.288T3 9V5q0-.425.288-.712T4 4t.713.288T5 5v1.35q1.275-1.6 3.113-2.475T12 3q1.875 0 3.513.7t2.862 1.925q1 1 1.675 2.3t.875 2.775q.05.425-.187.763t-.663.387t-.762-.187t-.388-.663q-.175-1.15-.675-2.15t-1.3-1.8q-.95-.95-2.212-1.5T12 5m1 6.6l1.2 1.2q.35.35.313.738t-.313.662t-.662.313t-.738-.313l-1.5-1.5q-.15-.15-.225-.337T11 11.975V8q0-.425.288-.712T12 7t.713.288T13 8z"
+      />
+    </svg>
+  );
+};
+
 const DotsIcon = (props: IconSvgProps) => {
   return (
     <svg
@@ -525,6 +542,70 @@ const HospitalIcon = (props: IconSvgProps) => {
         d="M20.913 5.889c.337.504.337 1.206.337 2.611v12.75h.5a.75.75 0 0 1 0 1.5h-20a.75.75 0 1 1 0-1.5h.5V8.5c0-1.405 0-2.107.337-2.611a2 2 0 0 1 .552-.552c.441-.295 2.537-.332 3.618-.336c-.004.291-.004.595-.004.91V7.25H4.25a.75.75 0 1 0 0 1.5h2.503v1.5H4.25a.75.75 0 0 0 0 1.5h2.503v1.5H4.25a.75.75 0 0 0 0 1.5h2.503v6.5h10v-6.5h2.497a.75.75 0 1 0 0-1.5h-2.497v-1.5h2.497a.75.75 0 1 0 0-1.5h-2.497v-1.5h2.497a.75.75 0 0 0 0-1.5h-2.497V5.91c0-.314 0-.618-.004-.91c1.081.005 3.17.042 3.612.337a2 2 0 0 1 .552.552"
         opacity=".5"
       />
+    </svg>
+  );
+};
+
+const HashFillIcon = (props: IconSvgProps) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      {...props}
+    >
+      <path
+        d="M10.4199 13.4181H13.2599L13.5799 10.5781H10.7399L10.4199 13.4181Z"
+        fill="currentColor"
+      ></path>
+      <path
+        d="M16.19 2H7.81C4.17 2 2 4.17 2 7.81V16.18C2 19.83 4.17 22 7.81 22H16.18C19.82 22 21.99 19.83 21.99 16.19V7.81C22 4.17 19.83 2 16.19 2ZM18.82 10.58H15.05L14.73 13.43H18.1C18.5 13.43 18.83 13.76 18.83 14.16C18.83 14.56 18.5 14.89 18.1 14.89H14.57L14.16 18.55C14.12 18.92 13.8 19.2 13.43 19.2C13.4 19.2 13.38 19.2 13.35 19.2C12.95 19.16 12.66 18.79 12.7 18.39L13.09 14.89H10.25L9.84 18.55C9.8 18.92 9.48 19.2 9.11 19.2C9.08 19.2 9.06 19.2 9.03 19.2C8.63 19.16 8.34 18.79 8.38 18.39L8.77 14.89H5.18C4.78 14.89 4.45 14.56 4.45 14.16C4.45 13.76 4.78 13.43 5.18 13.43H8.95L9.27 10.58H5.9C5.5 10.58 5.17 10.25 5.17 9.85C5.17 9.45 5.5 9.12 5.9 9.12H9.43L9.84 5.46C9.88 5.06 10.25 4.77 10.65 4.81C11.05 4.85 11.34 5.22 11.3 5.62L10.91 9.12H13.75L14.16 5.46C14.21 5.06 14.57 4.77 14.97 4.81C15.37 4.85 15.66 5.22 15.62 5.62L15.23 9.12H18.84C19.24 9.12 19.57 9.45 19.57 9.85C19.57 10.25 19.22 10.58 18.82 10.58Z"
+        fill="currentColor"
+      ></path>
+    </svg>
+  );
+};
+
+const HashIcon = (props: IconSvgProps) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <path
+        d="M10 3L8 21"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+      ></path>
+      <path
+        d="M16 3L14 21"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+      ></path>
+      <path
+        d="M3.5 9H21.5"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+      ></path>
+      <path
+        d="M2.5 15H20.5"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+      ></path>
     </svg>
   );
 };
@@ -1156,6 +1237,7 @@ export {
   CloseIcon,
   DownloadIcon,
   DeleteIcon,
+  DeleteHistoryIcon,
   DotsIcon,
   EyeIcon,
   EyeOffIcon,
@@ -1164,6 +1246,8 @@ export {
   HelpIcon,
   HeartIcon,
   HospitalIcon,
+  HashFillIcon,
+  HashIcon,
   LandingCrop,
   LockIcon,
   LogoutIcon,

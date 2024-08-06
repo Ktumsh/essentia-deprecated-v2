@@ -30,7 +30,7 @@ import {
   validateEmail,
   validatePassword,
   validateBirthdate,
-} from "@/lib/validators/validators";
+} from "@/lib/validators/form";
 import { ErrorMessages } from "@/lib/enums/error-message";
 
 const SignUpEntry = () => {

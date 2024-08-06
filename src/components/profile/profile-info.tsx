@@ -63,7 +63,10 @@ const ProfileInfo = ({ session }: any) => {
     session?.provider
   );
 
-  const hasUserName = usernameOrEmail(session);
+  const name = session?.user?.name || "";
+  const lastname = session?.user?.lastname || "";
+
+  const hasUsernameOrEmail = usernameOrEmail(session);
 
   return (
     <>
@@ -135,9 +138,9 @@ const ProfileInfo = ({ session }: any) => {
         <div className="flex flex-wrap mb-3 mt-1">
           <div className="flex flex-col mr-2">
             <div className="flex flex-col shrink">
-              <span className="text-xl font-bold">{session?.user?.name}</span>
+              <span className="text-xl font-bold">{`${name} ${lastname}`}</span>
               <span className="text-[15px] text-base-color-m dark:text-base-color-dark-m">
-                {hasUserName}
+                {hasUsernameOrEmail}
               </span>
             </div>
           </div>

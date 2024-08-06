@@ -16,7 +16,7 @@ export const MAINCAP_RESOURCES: MaincapResources[] = [
     description:
       "Descubre guías y actividades para equilibrar tu bienestar. ¡Empieza a sentirte mejor hoy!",
     textBtn: "Descubrir",
-    url: "/recursos/bienestar-emocional",
+    url: "/bienestar-emocional",
     img: "/capsules/capsule-02.webp",
   },
   {

@@ -11,9 +11,9 @@ import {
   Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
-import { PlayIcon, PlayIcon2, StarIcon } from "./icons/icons";
+import { PlayIcon2, StarIcon } from "./icons/icons";
 import { FC, useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn, normalizeTitle } from "@/lib/utils";
 import LiteYouTubeEmbed from "react-lite-youtube-embed";
 import "react-lite-youtube-embed/dist/LiteYouTubeEmbed.css";
 import "./lite-youtube.css";
@@ -42,6 +42,8 @@ const ResourceWrapper: FC<Props> = ({
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [activeVideo, setActiveVideo] = useState<Props | null>(null);
 
+  const formatedTitle = normalizeTitle(title);
+
   const handleOpenModal = (video: Props) => {
     setActiveVideo(video);
     onOpen();
@@ -63,7 +65,12 @@ const ResourceWrapper: FC<Props> = ({
         <main className="relative flex flex-col min-h-[calc(100dvh-80px)] w-full md:min-w-[768px] max-w-5xl mt-14 py-5 lg:px-5 shrink items-stretch grow">
           <div className="container mx-auto select-none">
             <div className="flex flex-col w-full mx-auto">
-              <div className="relative flex mb-5 border border-gray-100 dark:border-base-dark shadow-md lg:rounded-xl overflow-hidden">
+              <section
+                id={`introduccion-a-${formatedTitle}`}
+                data-id={`introduccion-a-${formatedTitle}`}
+                data-name={`Introducción a ${title}`}
+                className="relative flex mb-5 border border-gray-100 dark:border-base-dark shadow-md lg:rounded-xl overflow-hidden"
+              >
                 <div className="absolute p-5 top-0 right-0 z-20">
                   <Tooltip
                     className="bg-gradient-to-br from-white to-gray-100 dark:from-base-dark dark:to-base-full-dark text-xs text-base-color-h dark:text-base-color-dark-h"
@@ -133,7 +140,7 @@ const ResourceWrapper: FC<Props> = ({
                     </Button>
                   </Tooltip>
                 </div>
-              </div>
+              </section>
               <div
                 id="content"
                 className="relative text-base-color dark:text-base-color-dark"

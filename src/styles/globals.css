@@ -737,6 +737,10 @@ html.dark {
     @apply bg-white dark:bg-base-dark;
   }
 
+  .custom-scroll.v2::-webkit-scrollbar-track {
+    @apply bg-white dark:bg-base-full-dark;
+  }
+
   .custom-scroll::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.1);
   }

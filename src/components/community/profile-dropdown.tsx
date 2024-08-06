@@ -10,7 +10,7 @@ import {
 } from "@nextui-org/react";
 
 import { ThemeToggle } from "../theme-toggle";
-import { DotsIcon, LogoutIcon } from "../icons/icons";
+import { AvatarIcon, DotsIcon, LogoutIcon } from "../icons/icons";
 
 interface Props {
   name: string;
@@ -50,7 +50,13 @@ export default function ProfileDropdown({ name, username, avatar }: Props) {
                 description: "text-base-color-d dark:text-base-color-dark-m",
               }}
               avatarProps={{
+                classNames: {
+                  base: "bg-gray-300 dark:bg-gray-600",
+                },
                 src: avatar,
+                icon: (
+                  <AvatarIcon className="text-base-color-m dark:text-base-color-dark-m size-[80%]" />
+                ),
               }}
             />
           </Button>

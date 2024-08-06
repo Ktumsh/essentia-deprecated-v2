@@ -6,7 +6,7 @@ const Resources = () => {
     title,
     quote,
     image,
-    href: `/recursos/${resource}`,
+    href: `/${resource}`,
     span,
   }));
   return (

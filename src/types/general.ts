@@ -35,3 +35,32 @@ export interface HealthFact {
   fact: string;
   image: string;
 }
+
+export type SiteConfig = {
+  name: string;
+  description: string;
+  links: {
+    github: string;
+    instagram: string;
+    twitter: string;
+  };
+  navLinks: {
+    active?: boolean;
+    name: string;
+    href: string;
+    icon: (props: IconSvgProps) => JSX.Element;
+    fillIcon: (props: IconSvgProps) => JSX.Element;
+    isSearch?: boolean;
+  }[];
+  asideMenuLinks: {
+    name: string;
+    link: string;
+    icon: (props: any) => JSX.Element;
+  }[];
+  footerLinks: {
+    resources: { href: string; text: string }[];
+    additionalresources: { href: string; text: string }[];
+    comunidad: { href: string; text: string }[];
+    more: { href: string; text: string }[];
+  };
+};

@@ -9,7 +9,7 @@ interface Props {
   toggleMenu: () => void;
 }
 
-const MenuButton: React.FC<Props> = (props: Props) => {
+const MenuButton: React.FC<Props> = (props) => {
   return (
     <>
       <Button

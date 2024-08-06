@@ -2,6 +2,8 @@ import clsx, { type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Message } from "@/types/chat";
 
+/* import { customAlphabet } from "nanoid"; */
+
 export const getFirstNameAndLastName = (
   fullName: string | undefined | null
 ) => {
@@ -89,4 +91,27 @@ export const usernameOrEmail = (session: any) => {
     : session?.user?.email;
 
   return username;
+};
+
+export const normalizeTitle = (title: string) =>
+  title
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/ /g, "-");
+
+export const normalizeText = (text: string) =>
+  text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+export const containsAllLetters = (str: string, query: string) => {
+  let strIndex = 0;
+  for (const char of query) {
+    strIndex = str.indexOf(char, strIndex);
+    if (strIndex === -1) return false;
+    strIndex++;
+  }
+  return true;
 };

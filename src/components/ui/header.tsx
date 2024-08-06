@@ -18,6 +18,7 @@ import { normalizedPathName } from "@/lib/utils";
 
 import { Button, Input, Navbar, NavbarContent } from "@nextui-org/react";
 import Link from "next/link";
+import MainSearch from "../main-search";
 
 const Header = ({ session }: any) => {
   const pathname = usePathname();
@@ -73,22 +74,7 @@ const Header = ({ session }: any) => {
                 Essentia®️
               </Link>
             </div>
-            <Input
-              classNames={{
-                mainWrapper: "h-full w-10 xl:w-full",
-                input:
-                  "data-[has-start-content=true]:ps-7 text-sm placeholder:text-base-color-d dark:placeholder:text-base-color-dark-d placeholder:opacity-0 xl:placeholder:opacity-100",
-                inputWrapper:
-                  "h-full text-base-color-h bg-white dark:bg-base-dark-50 data-[hover=true]:bg-black/5 group-data-[focus=true]:bg-white dark:data-[hover=true]:bg-base-dark dark:group-data-[focus=true]:bg-base-dark-50",
-              }}
-              placeholder="Busca lo que quieras..."
-              size="md"
-              radius="full"
-              isClearable
-              startContent={
-                <SearchIcon className="absolute ml-[2px] xl:ml-0 left-2 xl:left-3 size-5" />
-              }
-            />
+            <MainSearch />
           </div>
         </div>
         <div className="z-40 fixed top-0 right-0">

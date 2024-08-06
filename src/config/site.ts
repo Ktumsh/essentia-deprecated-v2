@@ -14,10 +14,9 @@ import {
   SexualityIcon,
   WellbeingIcon,
 } from "@/components/icons/main";
+import { SiteConfig } from "@/types/general";
 
-export type SiteConfig = typeof siteConfig;
-
-export const siteConfig = {
+export const siteConfig: SiteConfig = {
   name: "Essentia",
   description:
     "Tu recurso de información esencial y confiable para una vida más saludable y equilibrada",
@@ -55,50 +54,50 @@ export const siteConfig = {
   asideMenuLinks: [
     {
       name: "Salud y bienestar",
-      link: "/recursos/salud-y-bienestar",
+      link: "/salud-y-bienestar",
       icon: HealthIcon,
     },
     {
       name: "Ejercicios y fitness",
-      link: "/recursos/ejercicios-y-fitness",
+      link: "/ejercicios-y-fitness",
       icon: ExcerciseIcon,
     },
     {
       name: "Nutrición y alimentación",
-      link: "/recursos/nutricion-y-alimentacion",
+      link: "/nutricion-y-alimentacion",
       icon: NutritionIcon,
     },
     {
       name: "Bienestar emocional",
-      link: "/recursos/bienestar-emocional",
+      link: "/bienestar-emocional",
       icon: WellbeingIcon,
     },
     {
       name: "Salud y educación sexual",
-      link: "/recursos/salud-y-educacion-sexual",
+      link: "/salud-y-educacion-sexual",
       icon: SexualityIcon,
     },
     {
       name: "Salud para todas las edades",
-      link: "/recursos/salud-para-todas-las-edades",
+      link: "/salud-para-todas-las-edades",
       icon: ForAllAgesIcon,
     },
   ],
   footerLinks: {
     resources: [
-      { href: "/recursos/salud-y-bienestar", text: "Salud y Bienestar" },
-      { href: "/recursos/ejercicios-y-fitness", text: "Ejercicios y Fitness" },
+      { href: "/salud-y-bienestar", text: "Salud y Bienestar" },
+      { href: "/ejercicios-y-fitness", text: "Ejercicios y Fitness" },
       {
-        href: "/recursos/nutricion-y-alimentacion",
+        href: "/nutricion-y-alimentacion",
         text: "Nutrición y Alimentación",
       },
-      { href: "/recursos/bienestar-emocional", text: "Bienestar Emocional" },
+      { href: "/bienestar-emocional", text: "Bienestar Emocional" },
       {
-        href: "/recursos/salud-y-educacion-sexual",
+        href: "/salud-y-educacion-sexual",
         text: "Salud y Educación Sexual",
       },
       {
-        href: "/recursos/salud-para-todas-las-edades",
+        href: "/salud-para-todas-las-edades",
         text: "Salud para Todas las Edades",
       },
     ],

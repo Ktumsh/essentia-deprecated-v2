@@ -8,7 +8,7 @@ import SignInWith from "./signin-with";
 import { Button, Checkbox, Input } from "@nextui-org/react";
 import Link from "next/link";
 import { ErrorMessages } from "@/lib/enums/error-message";
-import { validateEmail } from "@/lib/validators/validators";
+import { validateEmail } from "@/lib/validators/form";
 
 const LoginEntry = () => {
   const [email, setEmail] = useState("");

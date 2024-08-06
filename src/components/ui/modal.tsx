@@ -17,6 +17,8 @@ import {
 } from "@nextui-org/react";
 import { EyeIcon, HeartIcon } from "@/components/icons/icons";
 import { useRef, useEffect, FC } from "react";
+import { useModalHash } from "@/lib/hooks/use-modal-hash";
+import { normalizeTitle } from "@/lib/utils";
 
 interface Props {
   tooltip: string;
@@ -35,8 +37,8 @@ export const ModalComponent: FC<Props> = ({
   modalBody,
   componentId,
 }) => {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const formatedTitle = normalizeTitle(modalTitle);
   const componentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -60,6 +62,8 @@ export const ModalComponent: FC<Props> = ({
     }
   }, [isOpen, componentId]);
 
+  useModalHash(formatedTitle, isOpen, onOpen);
+
   return (
     <>
       <Tooltip
@@ -69,9 +73,15 @@ export const ModalComponent: FC<Props> = ({
         placement="top-end"
       >
         <Card
+          id={formatedTitle}
+          data-id={formatedTitle}
+          data-name={modalTitle}
           shadow="sm"
           isPressable
-          onPress={onOpen}
+          onPress={() => {
+            onOpen();
+            history.replaceState(null, "", `#${formatedTitle}`);
+          }}
           className="group h-64 rounded-xl text-base-color-h dark:text-base-color-dark bg-white dark:bg-base-full-dark border border-gray-100 dark:border-base-dark shadow-md !transition overflow-clip on-scroll"
         >
           <CardHeader className="absolute z-10 top-1 flex-col !items-start opacity-0 group-hover:opacity-100 group-hover:px-6 transition-all">
@@ -118,7 +128,7 @@ export const ModalComponent: FC<Props> = ({
               <ScrollShadow className="custom-scroll" size={80}>
                 <ModalBody className="text-base-color-h dark:text-base-color-dark-h">
                   <div dangerouslySetInnerHTML={{ __html: modalBody }} />
-                  {<div ref={componentRef}></div>}
+                  <div ref={componentRef}></div>
                 </ModalBody>
               </ScrollShadow>
               <ModalFooter className="text-base-color dark:text-base-color-dark">

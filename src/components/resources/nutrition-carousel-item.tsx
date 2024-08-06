@@ -14,7 +14,8 @@ import {
 
 import { EyeIcon, HeartIcon, StarIcon } from "../icons/icons";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn, normalizeTitle } from "@/lib/utils";
+import { useModalHash } from "@/lib/hooks/use-modal-hash";
 
 interface Props {
   modalSize?:
@@ -44,6 +45,10 @@ const NutritionCarouselItem = ({
   const [isLiked, setIsLiked] = useState(false);
   const [rating, setRating] = useState(0);
 
+  const formatedTitle = normalizeTitle(modalTitle);
+
+  useModalHash(formatedTitle, isOpen, onOpen);
+
   const handleRating = (index: number) => {
     setRating(index + 1);
   };
@@ -51,6 +56,9 @@ const NutritionCarouselItem = ({
   return (
     <>
       <Card
+        id={formatedTitle}
+        data-id={formatedTitle}
+        data-name={modalTitle}
         shadow="sm"
         radius="none"
         isPressable={false}
@@ -93,7 +101,10 @@ const NutritionCarouselItem = ({
                   variant="ghost"
                   radius="none"
                   size="lg"
-                  onPress={onOpen}
+                  onPress={() => {
+                    onOpen();
+                    history.replaceState(null, "", `#${formatedTitle}`);
+                  }}
                   className="text-white border-white hover:!bg-white hover:text-black uppercase font-spacemono font-medium"
                 >
                   Ver receta

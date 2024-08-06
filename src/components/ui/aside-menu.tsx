@@ -44,23 +44,11 @@ const AsideMenu = () => {
                       radius="lg"
                       variant="light"
                       startContent={
-                        <link.icon
-                          className={`size-5 transition-colors ${
-                            currentPath === link.link
-                              ? "text-bittersweet-400 dark:text-cerise-red-400 group-hover:text-bittersweet-500 dark:group-hover:text-cerise-red-500"
-                              : "text-base-color-h dark:text-base-color-dark group-hover:text-base-color dark:group-hover:text-white"
-                          }`}
-                        />
+                        <link.icon className="size-5 transition-colors text-base-color-h dark:text-base-color-dark group-hover:text-base-color dark:group-hover:text-white" />
                       }
                       className="w-fit lg:w-full min-w-fit lg:min-w-24 h-auto lg:h-[50px] justify-start text-left p-3 mb-2 data-[hover=true]:bg-white dark:hover:bg-base-dark !duration-150"
                     >
-                      <span
-                        className={`hidden lg:block text-sm mr-4 transition-colors ${
-                          currentPath === link.link
-                            ? "text-bittersweet-400 dark:text-cerise-red-400 group-hover:text-bittersweet-500 dark:group-hover:text-cerise-red-500"
-                            : "text-base-color-h dark:text-base-color-dark group-hover:text-base-color dark:group-hover:text-white"
-                        }`}
-                      >
+                      <span className="hidden lg:block text-sm mr-4 transition-colors text-base-color-h dark:text-base-color-dark group-hover:text-base-color dark:group-hover:text-white">
                         {link.name}
                       </span>
                     </Button>

@@ -1,33 +1,19 @@
 "use client";
 
-import {
-  Button,
-  Card,
-  CardBody,
-  Image,
-  Modal,
-  ModalContent,
-  useDisclosure,
-} from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { HEALTH_MODAL_DATA } from "@/consts/health-modal";
 import RESOURCES_VIDEOS from "@/consts/resources-videos";
 import { ModalComponent } from "../ui/modal";
-import LiteYouTubeEmbed from "react-lite-youtube-embed";
 import "react-lite-youtube-embed/dist/LiteYouTubeEmbed.css";
-import { Fragment, useState, useEffect } from "react";
+import { useState } from "react";
 import { Video } from "@/types/resource";
-import { HashIcon, PlayIcon } from "../icons/icons";
+import { HashIcon } from "../icons/icons";
 import Link from "next/link";
-import { normalizeTitle } from "@/lib/utils";
-import { useModalHash } from "@/lib/hooks/use-modal-hash";
+import VideoCard from "./video-card";
 
 const videos: Video[] =
   RESOURCES_VIDEOS.find((section) => section.section === "HealthWellness")
     ?.videos || [];
-
-const getYouTubeThumbnail = (videoId: string) => {
-  return `https://i.ytimg.com/vi_webp/${videoId}/maxresdefault.webp`;
-};
 
 const HealthWellness = () => {
   const [activeVideo, setActiveVideo] = useState<Video | null>(null);
@@ -97,93 +83,14 @@ const HealthWellness = () => {
           </h3>
         </div>
         <div className="grid grid-cols-12 gap-5">
-          {videos.map((video, index) => {
-            const formatedTitle = normalizeTitle(video.title);
-            const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
-            useModalHash(formatedTitle, isOpen, onOpen, setActiveVideo, video);
-
-            useEffect(() => {
-              console.log(isOpen);
-            }, [isOpen]);
-
-            return (
-              <Fragment key={index}>
-                <Card
-                  id={formatedTitle}
-                  data-id={formatedTitle}
-                  data-name={video.title}
-                  classNames={{
-                    base: "col-span-12 md:col-span-6 border border-gray-100 dark:border-base-dark bg-white dark:bg-base-full-dark on-scroll shadow-md",
-                    body: "p-0",
-                  }}
-                  shadow="sm"
-                >
-                  <CardBody>
-                    <div className="grid grid-cols-12 h-full items-center justify-center">
-                      <div className="relative col-span-5 size-full">
-                        <Card
-                          isPressable
-                          radius="md"
-                          onPress={() => {
-                            setActiveVideo(video);
-                            onOpen();
-                          }}
-                          classNames={{
-                            base: "h-full",
-                          }}
-                        >
-                          <Image
-                            src={getYouTubeThumbnail(video.link)}
-                            alt={video.title}
-                            classNames={{
-                              wrapper: "!max-w-none h-full rounded-md",
-                              img: "object-cover h-full rounded-md",
-                            }}
-                          />
-                          <PlayIcon className="group size-12 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10" />
-                        </Card>
-                      </div>
-                      <div className="flex flex-col justify-center h-full col-span-7 p-3">
-                        <p className="line-clamp-4 text-xs sm:text-sm text-base-color-h dark:text-base-color-dark">
-                          {video.description}
-                        </p>
-                      </div>
-                    </div>
-                  </CardBody>
-                </Card>
-                <Modal
-                  backdrop="blur"
-                  radius="none"
-                  size="5xl"
-                  placement="center"
-                  scrollBehavior="inside"
-                  isOpen={isOpen}
-                  onOpenChange={onOpenChange}
-                  classNames={{
-                    backdrop: "z-[101]",
-                    wrapper: "z-[102]",
-                    closeButton:
-                      "z-10 hover:bg-black/5 active:bg-black/10 text-white transition-colors duration-150",
-                  }}
-                >
-                  <ModalContent>
-                    {activeVideo && activeVideo.link === video.link && (
-                      <LiteYouTubeEmbed
-                        id={activeVideo.link}
-                        title={activeVideo.title}
-                        wrapperClass="yt-wrap !rounded-none"
-                        playerClass="yt-player"
-                        activatedClass="yt-activated"
-                        poster="maxresdefault"
-                        webp
-                      />
-                    )}
-                  </ModalContent>
-                </Modal>
-              </Fragment>
-            );
-          })}
+          {videos.map((video, index) => (
+            <VideoCard
+              key={index}
+              video={video}
+              activeVideo={activeVideo}
+              setActiveVideo={setActiveVideo}
+            />
+          ))}
         </div>
       </section>
 

@@ -1,6 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useMemo,
+  FC,
+  useId,
+} from "react";
+
 import {
   Button,
   Input,
@@ -11,93 +20,231 @@ import {
   Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
+
 import {
   Chevron,
   DeleteHistoryIcon,
   HashFillIcon,
   SearchIcon,
 } from "./icons/icons";
-import { useId } from "react";
-import { useRouter, usePathname } from "next/navigation";
-import { searchData, SearchResult } from "@/consts/search-data";
-import { containsAllLetters, normalizeText } from "@/lib/utils";
-import useWindowSize from "@/lib/hooks/use-window-size";
 
-const MainSearch: React.FC = () => {
+import { useRouter, usePathname } from "next/navigation";
+
+import { searchData, SearchResult } from "@/consts/search-data";
+
+import { normalizeText } from "@/lib/utils";
+
+import useDebounce from "@/lib/hooks/use-debounce";
+
+import { matchSorter } from "match-sorter";
+
+import { useLocalStorage } from "@rehooks/local-storage";
+
+import {
+  MATCH_KEYS,
+  RECENT_SEARCHES_KEY,
+  MAX_RECENT_SEARCHES,
+  MAX_RESULTS,
+} from "@/consts/search-constants";
+
+import { cn } from "@/lib/utils";
+
+import { searchStyles } from "@/styles/search-styles";
+
+const MainSearch: FC = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const id = useId();
   const router = useRouter();
   const pathname = usePathname();
-  const { width } = useWindowSize();
-
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [recentSearches, setRecentSearches] = useState<SearchResult[]>([]);
+  const [recentSearches, setRecentSearches] = useLocalStorage<SearchResult[]>(
+    RECENT_SEARCHES_KEY,
+    []
+  );
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [activeItem, setActiveItem] = useState(0);
+  const debouncedSearchTerm = useDebounce(searchTerm, 150);
+  const eventRef = useRef<"mouse" | "keyboard">();
+  const listRef = useRef<HTMLDivElement>(null);
+  const menuNodes = useRef(new Map<number, HTMLButtonElement>()).current;
+
+  const items = useMemo(() => {
+    if (debouncedSearchTerm.length < 2) return recentSearches;
+    const normalizedValue = normalizeText(debouncedSearchTerm);
+    const results = matchSorter(searchData, normalizedValue, {
+      keys: MATCH_KEYS,
+      sorter: (matches) =>
+        matches.sort((a, b) =>
+          a.item.type === "lvl1" ? -1 : b.item.type === "lvl1" ? 1 : 0
+        ),
+    }).slice(0, MAX_RESULTS);
+    return results.length > 0 ? results : recentSearches;
+  }, [debouncedSearchTerm, recentSearches]);
 
   useEffect(() => {
-    const storedSearches: SearchResult[] = JSON.parse(
-      localStorage.getItem("recentSearches") || "[]"
-    );
-    setRecentSearches(storedSearches);
+    if (debouncedSearchTerm.length < 2) {
+      setSearchResults([]);
+    } else {
+      const normalizedValue = normalizeText(debouncedSearchTerm);
+      const results = matchSorter(searchData, normalizedValue, {
+        keys: MATCH_KEYS,
+        sorter: (matches) =>
+          matches.sort((a, b) =>
+            a.item.type === "lvl1" ? -1 : b.item.type === "lvl1" ? 1 : 0
+          ),
+      }).slice(0, MAX_RESULTS);
+      setSearchResults(results);
+    }
+  }, [debouncedSearchTerm]);
+
+  const saveRecentSearch = useCallback(
+    (search: SearchResult) => {
+      const updatedSearches = [
+        search,
+        ...recentSearches.filter((s) => s.objectID !== search.objectID),
+      ].slice(0, MAX_RECENT_SEARCHES);
+      setRecentSearches(updatedSearches);
+    },
+    [recentSearches, setRecentSearches]
+  );
+
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchTerm(value);
   }, []);
 
-  const handleSearchChange = (value: string) => {
-    setSearchTerm(value);
+  const handleSearchSelect = useCallback(
+    (search: SearchResult) => {
+      if (pathname === search.url.split("#")[0]) {
+        window.location.hash = search.url.split("#")[1];
+        setTimeout(() => {
+          window.dispatchEvent(new Event("hashchange"));
+        }, 100);
+      } else {
+        router.push(search.url);
+      }
+      saveRecentSearch(search);
+      onClose();
+    },
+    [pathname, router, saveRecentSearch, onClose]
+  );
 
-    if (value.length < 2) {
-      setSearchResults([]);
-      return;
+  const clearRecentSearches = useCallback(() => {
+    setRecentSearches([]);
+  }, [setRecentSearches]);
+
+  const onItemSelect = useCallback(
+    (item: SearchResult) => {
+      onClose();
+      router.push(item.url);
+      saveRecentSearch(item);
+    },
+    [onClose, router, saveRecentSearch]
+  );
+
+  const onInputKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      eventRef.current = "keyboard";
+      switch (e.key) {
+        case "ArrowDown":
+          e.preventDefault();
+          setActiveItem((prev) => Math.min(prev + 1, items.length - 1));
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          setActiveItem((prev) => Math.max(prev - 1, 0));
+          break;
+        case "Enter":
+          if (items.length > 0) {
+            onItemSelect(items[activeItem]);
+          }
+          break;
+        default:
+          break;
+      }
+    },
+    [activeItem, items, onItemSelect]
+  );
+
+  useEffect(() => {
+    if (eventRef.current === "mouse" || !listRef.current) return;
+    const node = menuNodes.get(activeItem);
+    if (node) {
+      node.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
+  }, [activeItem, menuNodes]);
 
-    const normalizedValue = normalizeText(value);
-
-    const results = searchData.filter((search) => {
-      const normalizedContent = normalizeText(search.content);
-      const normalizedType = normalizeText(search.type);
+  const renderItem = useCallback(
+    (item: SearchResult, index: number, isRecent = false) => {
+      const isLvl1 = item.type === "lvl1";
+      const mainIcon = isRecent ? (
+        <SearchIcon className={cn(searchStyles.iconColor)} />
+      ) : isLvl1 && item.icon ? (
+        <item.icon className={cn(searchStyles.iconColor)} />
+      ) : (
+        <HashFillIcon className={cn(searchStyles.iconColor)} />
+      );
 
       return (
-        containsAllLetters(normalizedContent, normalizedValue) ||
-        containsAllLetters(normalizedType, normalizedValue)
+        <Button
+          key={item.objectID}
+          ref={(el) => {
+            if (el) menuNodes.set(index, el);
+            else menuNodes.delete(index);
+          }}
+          role="option"
+          data-value={item.content}
+          data-active={activeItem === index}
+          fullWidth
+          size="lg"
+          radius="sm"
+          variant="light"
+          disableAnimation
+          startContent={mainIcon}
+          endContent={
+            <Chevron
+              className={cn(
+                "size-5 rotate-180",
+                searchStyles.textHoverFocusActive
+              )}
+            />
+          }
+          className={cn(
+            searchStyles.buttonCommon,
+            searchStyles.buttonHoverFocusActive,
+            searchStyles.buttonTextColor
+          )}
+          onPress={() => handleSearchSelect(item)}
+        >
+          <div className="flex flex-col w-full justify-center max-w-[80%]">
+            {!isLvl1 && (
+              <span
+                className={cn(
+                  "text-xs select-none flex items-center",
+                  searchStyles.textHoverFocusActive
+                )}
+              >
+                {item.hierarchy?.lvl1}
+                {item.hierarchy?.lvl3 ? ` > ${item.hierarchy?.lvl2}` : ""}
+              </span>
+            )}
+            <p
+              className={cn(
+                "truncate text-base-color-h dark:text-base-color-dark-h select-none",
+                searchStyles.textHoverFocusActive
+              )}
+            >
+              {item.content}
+            </p>
+          </div>
+        </Button>
       );
-    });
-
-    setSearchResults(results);
-  };
-
-  const handleSearchSelect = (search: SearchResult) => {
-    if (pathname === search.url.split("#")[0]) {
-      window.location.hash = search.url.split("#")[1];
-      setTimeout(() => {
-        const event = new Event("hashchange");
-        window.dispatchEvent(event);
-      }, 100);
-    } else {
-      router.push(search.url);
-    }
-    saveRecentSearch(search);
-    onClose();
-  };
-
-  const handleRecentSearchClick = (search: SearchResult) => {
-    handleSearchSelect(search);
-  };
-
-  const saveRecentSearch = (search: SearchResult) => {
-    let updatedSearches = [...recentSearches];
-    if (!recentSearches.some((s) => s.objectID === search.objectID)) {
-      updatedSearches = [search, ...recentSearches].slice(0, 5);
-    }
-    setRecentSearches(updatedSearches);
-    localStorage.setItem("recentSearches", JSON.stringify(updatedSearches));
-  };
-
-  const clearRecentSearches = () => {
-    setRecentSearches([]);
-    localStorage.removeItem("recentSearches");
-  };
+    },
+    [activeItem, menuNodes, handleSearchSelect]
+  );
 
   return (
     <>
+      {/* Desktop Search */}
       <Button
         aria-label="Abrir búsqueda"
         radius="full"
@@ -108,6 +255,7 @@ const MainSearch: React.FC = () => {
         <span className="hidden lg:block">Busca rápida...</span>
       </Button>
 
+      {/* Mobile Search */}
       <Button
         aria-label="Abrir búsqueda"
         onPress={onOpen}
@@ -135,9 +283,10 @@ const MainSearch: React.FC = () => {
         <ModalContent>
           <>
             <ModalHeader>
-              <div className="flex items-center w-full pl-2 pr-4">
+              <div className={cn(searchStyles.modalHeader)}>
                 <Input
                   role="combobox"
+                  autoFocus
                   autoComplete="off"
                   autoCorrect="off"
                   spellCheck="false"
@@ -147,14 +296,14 @@ const MainSearch: React.FC = () => {
                   aria-labelledby={id}
                   isClearable
                   size="lg"
-                  placeholder="Busca todo lo que quieras..."
+                  placeholder="Busca información para sentirte mejor..."
                   value={searchTerm}
+                  onKeyDown={onInputKeyDown}
                   onValueChange={handleSearchChange}
                   startContent={<SearchIcon className="size-7 mr-1" />}
                   classNames={{
-                    inputWrapper:
-                      "h-14 bg-transparent data-[hover=true]:bg-transparent group-data-[focus=true]:bg-transparent text-base-color-m dark:text-base-color-dark-m group-data-[focus-visible=true]:ring-0 group-data-[focus-visible=true]:ring-offset-0",
-                    input: "placeholder:text-lg",
+                    inputWrapper: cn(searchStyles.inputWrapper),
+                    input: cn(searchStyles.input),
                   }}
                 />
                 <Kbd
@@ -172,7 +321,8 @@ const MainSearch: React.FC = () => {
               aria-label="Sugerencias"
               aria-labelledby={id}
               id={id}
-              className="px-4 mt-2 pb-4 overflow-y-auto max-h-[50vh] scrollbar-hide md:scrollbar-default custom-scroll v2"
+              ref={listRef}
+              className={cn(searchStyles.modalContent)}
             >
               {/* Búsquedas recientes */}
               {searchTerm.length < 1 && recentSearches.length > 0 && (
@@ -183,33 +333,9 @@ const MainSearch: React.FC = () => {
                     </div>
                   </div>
                   <div role="group" aria-labelledby={id}>
-                    {recentSearches.map((search, index) => (
-                      <Button
-                        key={index}
-                        role="option"
-                        data-value={search.content}
-                        fullWidth
-                        size="lg"
-                        radius="sm"
-                        variant="light"
-                        disableAnimation
-                        startContent={
-                          <SearchIcon className="size-7 text-base-color-d dark:text-base-color-dark-d group-data-[hover=true]:text-white group-data-[focus=true]:text-white" />
-                        }
-                        endContent={<Chevron className="size-5 rotate-180" />}
-                        className="justify-between h-16 mt-2 px-4 text-start bg-gray-200 dark:bg-base-dark data-[hover=true]:bg-bittersweet-400 dark:data-[hover=true]:bg-cerise-red-600 data-[focus=true]:bg-bittersweet-400 dark:data-[focus=true]:bg-cerise-red-600 text-base-color-m dark:text-base-color-dark-m hover:!text-white"
-                        onPress={() => handleRecentSearchClick(search)}
-                      >
-                        <div className="flex flex-col w-full justify-center max-w-[80%]">
-                          <span className="text-xs group-data-[focus=true]:text-white select-none">
-                            {search.type}
-                          </span>
-                          <p className="truncate text-base-color-h dark:text-base-color-dark-h group-data-[hover=true]:text-white group-data-[focus=true]:text-white select-none">
-                            {search.content}
-                          </p>
-                        </div>
-                      </Button>
-                    ))}
+                    {recentSearches.map((search, index) =>
+                      renderItem(search, index, true)
+                    )}
                     <Tooltip
                       content="Limpiar historial de búsquedas"
                       delay={800}
@@ -238,9 +364,9 @@ const MainSearch: React.FC = () => {
                 searchTerm.length < 6 &&
                 searchResults.length === 0 && (
                   <div role="presentation" data-value="no-results">
-                    <div className="flex flex-col text-center items-center justify-center h-32">
+                    <div className={cn(searchStyles.noResults)}>
                       <div>
-                        <p>No hay resultados para "{searchTerm}"</p>
+                        <p>No hay resultados para &quot;{searchTerm}&quot;</p>
                         <p className="text-base-color-d dark:text-base-color-dark-d">
                           Intente agregar más caracteres a su término de
                           búsqueda.
@@ -252,9 +378,9 @@ const MainSearch: React.FC = () => {
               {/* Esto aparece si el usuario ingresó más de 6 caracteres y no se encuentra la búsqueda */}
               {searchTerm.length >= 6 && searchResults.length === 0 && (
                 <div role="presentation" data-value="no-results">
-                  <div className="flex flex-col text-center items-center justify-center h-32">
+                  <div className={cn(searchStyles.noResults)}>
                     <div>
-                      <p>No hay resultados para "{searchTerm}"</p>
+                      <p>No hay resultados para &quot;{searchTerm}&quot;</p>
                       <p className="text-base-color-d dark:text-base-color-dark-d">
                         Intente buscar otra cosa.
                       </p>
@@ -265,43 +391,15 @@ const MainSearch: React.FC = () => {
               {/* Búsqueda | aparece cuando encuentra una o más búsquedas*/}
               {searchResults.length > 0 && (
                 <div role="presentation" data-value="search">
-                  {searchResults.map((result, index) => (
-                    <Button
-                      key={index}
-                      role="option"
-                      data-value={result.content}
-                      fullWidth
-                      size="lg"
-                      radius="sm"
-                      variant="light"
-                      disableAnimation
-                      startContent={
-                        result.icon ? (
-                          <result.icon className="size-6 text-base-color-d dark:text-base-color-dark-d group-data-[hover=true]:text-white group-data-[focus=true]:text-white" />
-                        ) : (
-                          <HashFillIcon className="size-6 text-base-color-d dark:text-base-color-dark-d group-data-[hover=true]:text-white group-data-[focus=true]:text-white" />
-                        )
-                      }
-                      endContent={<Chevron className="size-5 rotate-180" />}
-                      className="justify-between h-16 mt-2 px-4 text-start bg-gray-200 dark:bg-base-dark data-[hover=true]:bg-bittersweet-400 dark:data-[hover=true]:bg-cerise-red-600 data-[focus=true]:bg-bittersweet-400 dark:data-[focus=true]:bg-cerise-red-600 text-base-color-m dark:text-base-color-dark-m hover:!text-white"
-                      onPress={() => handleSearchSelect(result)}
-                    >
-                      <div className="flex flex-col w-full justify-center max-w-[80%]">
-                        <span className="text-xs group-data-[focus=true]:text-white select-none">
-                          {result.type}
-                        </span>
-                        <p className="truncate text-base-color-h dark:text-base-color-dark-h group-data-[hover=true]:text-white group-data-[focus=true]:text-white select-none">
-                          {result.content}
-                        </p>
-                      </div>
-                    </Button>
-                  ))}
+                  {searchResults.map((result, index) =>
+                    renderItem(result, index)
+                  )}
                 </div>
               )}
               {/* Sin búsquedas recientes */}
               {searchTerm.length < 1 && recentSearches.length === 0 && (
                 <div role="presentation" data-value="no-recent">
-                  <div className="flex flex-col text-center items-center justify-center h-32">
+                  <div className={cn(searchStyles.noResults)}>
                     <p className="text-base-color-d dark:text-base-color-dark-d">
                       Sin búsquedas recientes
                     </p>

@@ -137,6 +137,7 @@ export const ModalComponent: FC<Props> = ({
                   color="default"
                   variant="light"
                   onPress={onClose}
+                  className="data-[hover=true]:bg-black/5 data-[hover=true]:dark:bg-white/5"
                 >
                   Cerrar
                 </Button>

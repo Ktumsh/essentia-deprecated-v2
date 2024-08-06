@@ -98,7 +98,7 @@ const ExcerciseFitness = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <iframe
-            className="on-scroll rounded-3xl shadow-medium border-2 border-white/30 box-content"
+            className="rounded-3xl shadow-medium border-2 border-white/30 box-content"
             src="https://open.spotify.com/embed/playlist/37i9dQZF1DX0SZWVrotKn1?utm_source=generator"
             width="100%"
             height="152"
@@ -106,7 +106,7 @@ const ExcerciseFitness = () => {
             loading="lazy"
           ></iframe>
           <iframe
-            className="on-scroll rounded-3xl shadow-medium border-2 border-white/30 box-content"
+            className="rounded-3xl shadow-medium border-2 border-white/30 box-content"
             src="https://open.spotify.com/embed/playlist/37i9dQZF1DX76Wlfdnj7AP?utm_source=generator"
             width="100%"
             height="152"
@@ -114,7 +114,7 @@ const ExcerciseFitness = () => {
             loading="lazy"
           ></iframe>
           <iframe
-            className="on-scroll rounded-3xl shadow-medium border-2 border-white/30 box-content"
+            className="rounded-3xl shadow-medium border-2 border-white/30 box-content"
             src="https://open.spotify.com/embed/playlist/37i9dQZF1DXdDh4h59PJIQ?utm_source=generator"
             width="100%"
             height="152"
@@ -122,7 +122,7 @@ const ExcerciseFitness = () => {
             loading="lazy"
           ></iframe>
           <iframe
-            className="on-scroll rounded-3xl shadow-medium border-2 border-white/30 box-content"
+            className="rounded-3xl shadow-medium border-2 border-white/30 box-content"
             src="https://open.spotify.com/embed/playlist/37i9dQZF1DX4osfY3zybD2?utm_source=generator"
             width="100%"
             height="152"
@@ -130,7 +130,7 @@ const ExcerciseFitness = () => {
             loading="lazy"
           ></iframe>
           <iframe
-            className="on-scroll rounded-3xl shadow-medium border-2 border-white/30 box-content"
+            className="rounded-3xl shadow-medium border-2 border-white/30 box-content"
             src="https://open.spotify.com/embed/playlist/37i9dQZF1DX45grRWk2ghU?utm_source=generator"
             width="100%"
             height="152"
@@ -138,7 +138,7 @@ const ExcerciseFitness = () => {
             loading="lazy"
           ></iframe>
           <iframe
-            className="on-scroll rounded-3xl shadow-medium border-2 border-white/30 box-content"
+            className="rounded-3xl shadow-medium border-2 border-white/30 box-content"
             src="https://open.spotify.com/embed/playlist/37i9dQZF1DX32NsLKyzScr?utm_source=generator"
             width="100%"
             height="152"

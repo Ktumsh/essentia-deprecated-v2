@@ -38,7 +38,7 @@ const ButtonUp = () => {
   return (
     <div
       id="button-up"
-      className={`fixed bottom-16 md:bottom-2 right-2 transition-opacity z-[100] ${isVisible ? "opacity-100" : "opacity-0"}`}
+      className={`fixed bottom-16 md:bottom-2 right-2 transition-opacity z-[99] ${isVisible ? "opacity-100" : "opacity-0"}`}
     >
       <Button
         id="scroll-to-top"

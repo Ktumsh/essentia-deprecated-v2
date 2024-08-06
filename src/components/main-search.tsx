@@ -50,12 +50,16 @@ import {
 import { cn } from "@/lib/utils";
 
 import { searchStyles } from "@/styles/search-styles";
+import useWindowSize from "@/lib/hooks/use-window-size";
 
 const MainSearch: FC = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const id = useId();
   const router = useRouter();
   const pathname = usePathname();
+
+  const { width } = useWindowSize();
+
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [recentSearches, setRecentSearches] = useLocalStorage<SearchResult[]>(
     RECENT_SEARCHES_KEY,
@@ -214,7 +218,7 @@ const MainSearch: FC = () => {
           }}
           role="option"
           data-value={item.content}
-          data-active={activeItem === index}
+          data-active={width && width > 768 ? activeItem === index : undefined}
           fullWidth
           size="lg"
           radius="sm"

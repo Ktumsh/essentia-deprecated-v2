@@ -1,56 +1,38 @@
 "use client";
 
+import { useState } from "react";
+
 import { Navbar } from "@nextui-org/react";
+
 import Image from "next/image";
+import Link from "next/link";
+
 import MenuButton from "./menu-button";
 import MobileMenu from "./mobile-menu";
 
-import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import SwipeableContainer from "../swipeable-container";
 
-const MobileHeaderTop = ({ session }: any) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const startX = useRef(0);
-  const startY = useRef(0);
-  const touchMargin = 50;
+import { $ } from "@/lib/dom-selector";
+
+const MobileHeader = ({ session }: any) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
-    setIsOpen((prev) => !prev);
-    document.body.classList.toggle("overflow-hidden");
+    setIsMenuOpen((prev) => !prev);
+    $("body")?.classList.toggle("overflow-hidden", !isMenuOpen);
   };
-
-  const handleTouchStart = (e: TouchEvent) => {
-    const touch = e.touches[0];
-    startX.current = touch.clientX;
-    startY.current = touch.clientY;
-  };
-
-  const handleTouchEnd = (e: TouchEvent) => {
-    const touch = e.changedTouches[0];
-    const deltaX = touch.clientX - startX.current;
-    const deltaY = touch.clientY - startY.current;
-
-    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
-      if (
-        startX.current > window.innerWidth - touchMargin &&
-        deltaX < 0 &&
-        !isOpen
-      ) {
-        toggleMenu();
-      } else if (deltaX > 0 && isOpen) {
-        toggleMenu();
-      }
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("touchstart", handleTouchStart, {
-      passive: true,
-    });
-    document.addEventListener("touchend", handleTouchEnd, { passive: true });
-  }, [isOpen]);
   return (
-    <>
+    <SwipeableContainer
+      onSwipedLeft={() => {
+        setIsMenuOpen(true);
+        $("body")?.classList.add("overflow-hidden");
+      }}
+      onSwipedRight={() => {
+        setIsMenuOpen(false);
+        $("body")?.classList.remove("overflow-hidden");
+      }}
+      isMenuOpen={isMenuOpen}
+    >
       <Navbar
         shouldHideOnScroll
         classNames={{
@@ -80,23 +62,23 @@ const MobileHeaderTop = ({ session }: any) => {
         </Link>
         <MenuButton
           sessionImage={session?.user?.image}
-          isOpen={isOpen}
+          isOpen={isMenuOpen}
           toggleMenu={toggleMenu}
         />
       </Navbar>
-      <MobileMenu isMenuOpen={isOpen} session={session} />
+      <MobileMenu isMenuOpen={isMenuOpen} session={session} />
       <div
-        data-overlay-container={isOpen}
+        data-overlay-container={isMenuOpen}
         aria-hidden={true}
         onClick={() => toggleMenu()}
-        className={`fixed inset-0 w-full h-full min-h-dvh bg-overlay/50 transition-opacity lg:hidden z-50 ${
-          isOpen
+        className={`fixed inset-0 w-full h-full min-h-dvh bg-black/80 transition-opacity lg:hidden z-40 ${
+          isMenuOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
         }`}
       ></div>
-    </>
+    </SwipeableContainer>
   );
 };
 
-export default MobileHeaderTop;
+export default MobileHeader;

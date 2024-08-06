@@ -58,8 +58,10 @@ const MobileMenu = ({ isMenuOpen, session }: Props) => {
       <div
         id={MOBILE_MENU_CONTENT_ID}
         role="menu"
-        className={`fixed inset-y-0 right-0 z-[999] flex w-screen max-w-[310px] h-full flex-col items-center overflow-x-auto bg-white dark:bg-base-full-dark lg:hidden px-8 no-scroll ${
-          isMenuOpen ? "open" : ""
+        className={`fixed inset-y-0 right-0 z-[70] flex w-screen max-w-[310px] h-full flex-col items-center overflow-x-auto bg-white dark:bg-base-full-dark lg:hidden px-8 no-scroll transition-transform duration-400 ${
+          isMenuOpen
+            ? "translate-x-0 pointer-events-auto"
+            : "translate-x-full pointer-events-none"
         }`}
       >
         <nav

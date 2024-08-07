@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { tooltipStyles } from "@/styles/tooltip-styles";
 import { IconSvgProps } from "@/types/general";
 import { Button, Link, Tooltip } from "@nextui-org/react";
 
@@ -25,8 +26,7 @@ const NavbarLinks: React.FC<NavbarLinksProps> = ({ pages }) => {
             delay={500}
             closeDelay={0}
             classNames={{
-              content:
-                "bg-gradient-to-br from-white to-gray-300 dark:from-base-dark dark:to-base-full-dark text-xs text-base-color-h dark:text-base-color-dark-h",
+              content: tooltipStyles.content,
             }}
           >
             <li

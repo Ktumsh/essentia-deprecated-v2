@@ -26,6 +26,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usernameOrEmail } from "@/lib/utils";
 import { useRef } from "react";
+import { tooltipStyles } from "@/styles/tooltip-styles";
 
 const getProfileImageUrl = (url: string, provider: string) => {
   if (!url) {
@@ -198,7 +199,9 @@ const ProfileInfo = ({ session }: any) => {
                             content="Agregar foto"
                             delay={800}
                             closeDelay={0}
-                            className="bg-gradient-to-br from-white to-gray-100 dark:from-base-dark dark:to-base-full-dark text-xs text-base-color-h dark:text-base-color-dark-h"
+                            classNames={{
+                              content: tooltipStyles.content,
+                            }}
                           >
                             <Button
                               aria-label="Agregar foto de banner"
@@ -288,7 +291,9 @@ const ProfileInfo = ({ session }: any) => {
                             content="Agregar foto"
                             delay={800}
                             closeDelay={0}
-                            className="bg-gradient-to-br from-white to-gray-100 dark:from-base-dark dark:to-base-full-dark text-xs text-base-color-h dark:text-base-color-dark-h"
+                            classNames={{
+                              content: tooltipStyles.content,
+                            }}
                           >
                             <Button
                               isIconOnly

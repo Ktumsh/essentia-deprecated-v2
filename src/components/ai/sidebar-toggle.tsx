@@ -1,6 +1,7 @@
 import { Tooltip } from "@nextui-org/react";
 
 import { SidebarIcon } from "../icons/icons";
+import { tooltipStyles } from "@/styles/tooltip-styles";
 
 interface SidebarToggleProps {
   toggleSidebar: () => void;
@@ -20,8 +21,7 @@ const SidebarToggle: React.FC<SidebarToggleProps> = ({
         delay={800}
         closeDelay={0}
         classNames={{
-          content:
-            "bg-gradient-to-br from-white to-gray-300 dark:from-base-dark dark:to-base-full-dark text-xs text-base-color-h dark:text-base-color-dark-h",
+          content: tooltipStyles.content,
         }}
       >
         <button

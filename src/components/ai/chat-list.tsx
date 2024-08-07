@@ -4,6 +4,7 @@ import { ChatIcon, DeleteIcon, NewIcon, SidebarFillIcon } from "../icons/icons";
 
 import DeleteChatModal from "./chat-options-menu";
 import Link from "next/link";
+import { tooltipStyles } from "@/styles/tooltip-styles";
 
 interface ChatSession {
   sessionId: string;
@@ -61,8 +62,7 @@ const ChatList: React.FC<ChatListProps> = ({
             delay={800}
             closeDelay={0}
             classNames={{
-              content:
-                "bg-gradient-to-br from-white to-gray-300 dark:from-base-dark dark:to-base-full-dark text-xs text-base-color-h dark:text-base-color-dark-h",
+              content: tooltipStyles.content,
             }}
           >
             <button
@@ -110,9 +110,8 @@ const ChatList: React.FC<ChatListProps> = ({
                         delay={800}
                         closeDelay={0}
                         classNames={{
-                          base: "before:bg-white dark:before:bg-base-dark",
-                          content:
-                            "bg-gradient-to-br from-white to-gray-300 dark:from-base-dark dark:to-base-full-dark text-xs text-base-color-h dark:text-base-color-dark-h",
+                          base: tooltipStyles.arrow,
+                          content: tooltipStyles.content,
                         }}
                       >
                         <span>{session.name}</span>
@@ -130,15 +129,14 @@ const ChatList: React.FC<ChatListProps> = ({
                   delay={800}
                   closeDelay={0}
                   classNames={{
-                    content:
-                      "bg-gradient-to-br from-white to-gray-300 dark:from-base-dark dark:to-base-full-dark text-xs text-base-color-h dark:text-base-color-dark-h",
+                    content: tooltipStyles.content,
                   }}
                 >
                   <Button
                     variant="light"
                     disableRipple
                     radius="sm"
-                    className="min-w-fit group flex items-center justify-center size-7 p-0 my-auto mr-2 dark:hover:text-white data-[hover=true]:bg-white absolute inset-y-0 right-0 gap-1.5 opacity-0 group-hover:opacity-100 group-[.selected]:opacity-100 group-[.active]:opacity-100 transition-opacity duration-150"
+                    className="min-w-fit group flex items-center justify-center size-7 p-0 my-auto mr-2 dark:hover:text-white data-[hover=true]:bg-white dark:data-[hover=true]:bg-base-dark absolute inset-y-0 right-0 gap-1.5 opacity-0 group-hover:opacity-100 group-[.selected]:opacity-100 group-[.active]:opacity-100 transition-opacity duration-150"
                     aria-haspopup="menu"
                     endContent={<DeleteIcon className="size-4" />}
                     onClick={() => confirmDeleteChat(session.sessionId)}

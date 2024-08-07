@@ -32,6 +32,7 @@ import {
   validateBirthdate,
 } from "@/lib/validators/form";
 import { ErrorMessages } from "@/lib/enums/error-message";
+import { tooltipStyles } from "@/styles/tooltip-styles";
 
 const SignUpEntry = () => {
   const [step, setStep] = useState(1);
@@ -303,11 +304,13 @@ const SignUpEntry = () => {
                   <PopoverTrigger>
                     <div className="absolute top-2.5 left-3">
                       <Tooltip
-                        className="bg-white text-xs text-base-color-h"
                         content="Haz click para obtener más información"
                         placement="top"
                         delay={500}
                         closeDelay={0}
+                        classNames={{
+                          content: tooltipStyles.content,
+                        }}
                       >
                         <button
                           type="button"

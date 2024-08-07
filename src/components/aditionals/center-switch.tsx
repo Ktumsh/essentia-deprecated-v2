@@ -1,5 +1,6 @@
 import { Switch, Tooltip } from "@nextui-org/react";
 import { HospitalIcon, PharmacyIcon } from "../icons/icons";
+import { tooltipStyles } from "@/styles/tooltip-styles";
 
 interface Props {
   isSelected: boolean;
@@ -19,7 +20,6 @@ export default function CenterSwitch({
 
   return (
     <Tooltip
-      className="bg-white dark:bg-base-full-dark text-xs text-base-color-h dark:text-base-color-dark-h"
       content={
         isSelected
           ? "Buscar farmacias cercanas"
@@ -28,6 +28,9 @@ export default function CenterSwitch({
       placement="top-start"
       delay={1000}
       closeDelay={0}
+      classNames={{
+        content: tooltipStyles.content,
+      }}
     >
       <div className="flex flex-col gap-2 bg-base">
         <Switch

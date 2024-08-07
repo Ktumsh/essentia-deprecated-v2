@@ -3,7 +3,6 @@
 import SearchHighlight from "@/components/search-highlight";
 import {
   Button,
-  Card,
   Chip,
   Image,
   Modal,
@@ -17,6 +16,7 @@ import { cn, normalizeTitle } from "@/lib/utils";
 import LiteYouTubeEmbed from "react-lite-youtube-embed";
 import "react-lite-youtube-embed/dist/LiteYouTubeEmbed.css";
 import "./lite-youtube.css";
+import { tooltipStyles } from "@/styles/tooltip-styles";
 
 interface Props {
   title: string;
@@ -73,10 +73,12 @@ const ResourceWrapper: FC<Props> = ({
               >
                 <div className="absolute p-5 top-0 right-0 z-20">
                   <Tooltip
-                    className="bg-gradient-to-br from-white to-gray-100 dark:from-base-dark dark:to-base-full-dark text-xs text-base-color-h dark:text-base-color-dark-h"
                     content="Contenido recomendado"
                     delay={800}
                     closeDelay={0}
+                    classNames={{
+                      content: tooltipStyles.content,
+                    }}
                   >
                     <Chip
                       variant="shadow"
@@ -115,10 +117,12 @@ const ResourceWrapper: FC<Props> = ({
                 </div>
                 <div className="absolute right-0 bottom-0 px-5 py-3 z-20">
                   <Tooltip
-                    className="bg-gradient-to-br from-white to-gray-100 dark:from-base-dark dark:to-base-full-dark text-xs text-base-color-h dark:text-base-color-dark-h"
                     content={videoTitle}
                     delay={800}
                     closeDelay={0}
+                    classNames={{
+                      content: tooltipStyles.content,
+                    }}
                   >
                     <Button
                       variant="flat"

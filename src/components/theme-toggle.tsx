@@ -6,6 +6,7 @@ import { useIsSSR } from "@react-aria/ssr";
 import { Button, Tooltip } from "@nextui-org/react";
 import { MoonIcon, SunIcon, SystemIcon } from "./icons/icons";
 import { cn } from "@/lib/utils";
+import { tooltipStyles } from "@/styles/tooltip-styles";
 
 export const ThemeToggle = ({ className = "!size-6" }) => {
   const { theme, setTheme } = useTheme();
@@ -41,11 +42,11 @@ export const ThemeToggle = ({ className = "!size-6" }) => {
         delay={800}
         closeDelay={0}
         classNames={{
-          content:
-            "bg-white dark:bg-base-dark text-xs text-base-color-h dark:text-base-color-dark",
+          content: tooltipStyles.content,
         }}
       >
         <Button
+          aria-label="Modo sistema"
           disableRipple
           isIconOnly
           size="sm"
@@ -58,6 +59,7 @@ export const ThemeToggle = ({ className = "!size-6" }) => {
           )}
         >
           <SystemIcon
+            aria-hidden="true"
             className={cn("size-3", className === "!size-8" && "size-4")}
           />
         </Button>
@@ -67,11 +69,11 @@ export const ThemeToggle = ({ className = "!size-6" }) => {
         delay={800}
         closeDelay={0}
         classNames={{
-          content:
-            "bg-white dark:bg-base-dark text-xs text-base-color-h dark:text-base-color-dark",
+          content: tooltipStyles.content,
         }}
       >
         <Button
+          aria-label="Modo claro"
           disableRipple
           isIconOnly
           size="sm"
@@ -84,6 +86,7 @@ export const ThemeToggle = ({ className = "!size-6" }) => {
           )}
         >
           <SunIcon
+            aria-hidden="true"
             className={cn("size-3", className === "!size-8" && "size-4")}
           />
         </Button>
@@ -93,11 +96,11 @@ export const ThemeToggle = ({ className = "!size-6" }) => {
         delay={800}
         closeDelay={0}
         classNames={{
-          content:
-            "bg-white dark:bg-base-dark text-xs text-base-color-h dark:text-base-color-dark",
+          content: tooltipStyles.content,
         }}
       >
         <Button
+          aria-label="Modo oscuro"
           disableRipple
           isIconOnly
           size="sm"
@@ -110,6 +113,7 @@ export const ThemeToggle = ({ className = "!size-6" }) => {
           )}
         >
           <MoonIcon
+            aria-hidden="true"
             className={cn("size-3", className === "!size-8" && "size-4")}
           />
         </Button>

@@ -19,6 +19,7 @@ import { EyeIcon, HeartIcon } from "@/components/icons/icons";
 import { useRef, useEffect, FC } from "react";
 import { useModalHash } from "@/lib/hooks/use-modal-hash";
 import { normalizeTitle } from "@/lib/utils";
+import { tooltipStyles } from "@/styles/tooltip-styles";
 
 interface Props {
   tooltip: string;
@@ -67,10 +68,12 @@ export const ModalComponent: FC<Props> = ({
   return (
     <>
       <Tooltip
-        className="bg-gradient-to-br from-white to-gray-100 dark:from-base-dark dark:to-base-full-dark text-xs text-base-color-h dark:text-base-color-dark-h duration-250"
         content={tooltip}
         closeDelay={0}
         placement="top-end"
+        classNames={{
+          content: tooltipStyles.content,
+        }}
       >
         <Card
           id={formatedTitle}

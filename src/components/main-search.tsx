@@ -51,6 +51,7 @@ import { cn } from "@/lib/utils";
 
 import { searchStyles } from "@/styles/search-styles";
 import useWindowSize from "@/lib/hooks/use-window-size";
+import { tooltipStyles } from "@/styles/tooltip-styles";
 
 const MainSearch: FC = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -388,8 +389,7 @@ const MainSearch: FC = () => {
                       delay={800}
                       closeDelay={0}
                       classNames={{
-                        content:
-                          "bg-gradient-to-br from-white to-gray-300 dark:from-base-dark dark:to-base-full-dark text-xs text-base-color-h dark:text-base-color-dark-h",
+                        content: tooltipStyles.content,
                       }}
                     >
                       <Button

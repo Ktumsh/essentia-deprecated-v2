@@ -2,6 +2,7 @@ import { Button, Card, Chip, Tooltip } from "@nextui-org/react";
 
 import { DownloadIcon, StarIcon } from "../icons/icons";
 import Link from "next/link";
+import { tooltipStyles } from "@/styles/tooltip-styles";
 
 export default function Guides() {
   const guides = [
@@ -68,10 +69,12 @@ export default function Guides() {
                 <div className="inline-flex items-center justify-between w-full mb-3">
                   <h2 className="text-2xl font-bold">{guide.title}</h2>
                   <Tooltip
-                    className="bg-white dark:bg-base-full-dark text-xs text-base-color-h dark:text-base-color-dark-h"
                     content="Contenido recomendado"
                     delay={500}
                     closeDelay={0}
+                    classNames={{
+                      content: tooltipStyles.content,
+                    }}
                   >
                     {guide.recommended && (
                       <Chip

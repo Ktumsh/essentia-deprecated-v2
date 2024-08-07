@@ -63,8 +63,8 @@ const ResourceWrapper: FC<Props> = ({
           animate={{ opacity: 1 }}
           transition={{ ease: "easeInOut", duration: 0.5 }}
           className={cn(
-            "before:absolute before:left-1/3 before:top-1/4 before:w-[800px] before:h-[600px] before:content-[''] before:z-[-1] size-[600px] bg-cover opacity-70 before:blur-[200px] before:rounded-full before:opacity-40",
-            "after:absolute after:left-1/2 after:top-1/4 after:w-[160px] after:h-[200px] after:content-[''] after:z-[-1] size-[600px] bg-cover opacity-70 after:blur-3xl after:opacity-80",
+            "before:absolute before:left-1/3 before:top-1/4 before:w-[800px] before:h-[600px] before:content-[''] before:z-[-1] before:blur-[200px] before:rounded-full before:opacity-40",
+            "after:absolute after:left-1/2 after:top-1/4 after:w-[160px] after:h-[200px] after:content-[''] after:z-[-1] after:blur-3xl after:opacity-80",
             `before:${background} after:${background}`
           )}
         ></motion.div>

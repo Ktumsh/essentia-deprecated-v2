@@ -101,8 +101,6 @@ export default async function RootLayout({
       >
         <Providers
           forcedTheme={!session ? "light" : undefined}
-          attribute="class"
-          defaultTheme="light"
           disableTransitionOnChange
         >
           <div className="min-h-dvh size-full relative">{children}</div>

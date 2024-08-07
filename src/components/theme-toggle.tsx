@@ -2,34 +2,26 @@
 
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
-import { useIsSSR } from "@react-aria/ssr";
 import { Button, Tooltip } from "@nextui-org/react";
 import { MoonIcon, SunIcon, SystemIcon } from "./icons/icons";
 import { cn } from "@/lib/utils";
 import { tooltipStyles } from "@/styles/tooltip-styles";
 
+type Theme = "light" | "dark" | "system";
+
 export const ThemeToggle = ({ className = "!size-6" }) => {
   const { theme, setTheme } = useTheme();
-  const isSSR = useIsSSR();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    if (!isSSR && theme) {
-      document.documentElement.classList.toggle("dark", theme === "dark");
-    }
-  }, [theme, isSSR]);
-
-  const handleThemeChange = (newTheme: string) => {
-    if (!isSSR) {
-      setTheme(newTheme);
-    }
-  };
-
   if (!mounted) return null;
+
+  const handleThemeChange = (newTheme: Theme) => {
+    setTheme(newTheme);
+  };
 
   return (
     <div
@@ -41,9 +33,7 @@ export const ThemeToggle = ({ className = "!size-6" }) => {
         content="Sistema"
         delay={800}
         closeDelay={0}
-        classNames={{
-          content: tooltipStyles.content,
-        }}
+        classNames={{ content: tooltipStyles.content }}
       >
         <Button
           aria-label="Modo sistema"
@@ -68,9 +58,7 @@ export const ThemeToggle = ({ className = "!size-6" }) => {
         content="Claro"
         delay={800}
         closeDelay={0}
-        classNames={{
-          content: tooltipStyles.content,
-        }}
+        classNames={{ content: tooltipStyles.content }}
       >
         <Button
           aria-label="Modo claro"
@@ -95,9 +83,7 @@ export const ThemeToggle = ({ className = "!size-6" }) => {
         content="Oscuro"
         delay={800}
         closeDelay={0}
-        classNames={{
-          content: tooltipStyles.content,
-        }}
+        classNames={{ content: tooltipStyles.content }}
       >
         <Button
           aria-label="Modo oscuro"

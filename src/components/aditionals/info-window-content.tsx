@@ -2,8 +2,10 @@ import { Fragment } from "react";
 import { LinkIcon } from "../icons/icons";
 
 const InfoWindowContent = ({ placeDetails }: any) => (
-  <div className="flex flex-col gap-2 text-base-color-h dark:text-base-color-dark-h">
-    <h2 className="text-xl font-bold mb-2 font-dmsans">{placeDetails.name}</h2>
+  <div className="flex flex-col mt-4 gap-2 text-base-color-h dark:text-base-color-dark-h">
+    <h2 className="text-xl font-bold font-dmsans absolute top-0 left-0 m-4">
+      {placeDetails.name}
+    </h2>
     <p className="font-normal">
       <strong className="font-bold">Dirección:</strong>{" "}
       {placeDetails.formatted_address}

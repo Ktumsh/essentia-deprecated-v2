@@ -14,8 +14,12 @@ import { PlayIcon2, StarIcon } from "./icons/icons";
 import { FC, useState } from "react";
 import { cn, normalizeTitle } from "@/lib/utils";
 import LiteYouTubeEmbed from "react-lite-youtube-embed";
+
+import { motion } from "framer-motion";
+
 import "react-lite-youtube-embed/dist/LiteYouTubeEmbed.css";
 import "./lite-youtube.css";
+
 import { tooltipStyles } from "@/styles/tooltip-styles";
 
 interface Props {
@@ -52,14 +56,18 @@ const ResourceWrapper: FC<Props> = ({
     <>
       <div
         aria-hidden="true"
-        className="absolute inset-0 z-0 overflow-hidden pointer-events-none hidden dark:block"
+        className="fixed inset-0 z-0 overflow-hidden pointer-events-none hidden dark:block"
       >
-        <div
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ ease: "easeInOut", duration: 0.5 }}
           className={cn(
-            "page-bg-v2 fixed top-0 left-1/3 scale-150 size-[600px] bg-cover opacity-70",
-            background
+            "before:absolute before:left-1/3 before:top-1/4 before:w-[800px] before:h-[600px] before:content-[''] before:z-[-1] size-[600px] bg-cover opacity-70 before:blur-[200px] before:rounded-full before:opacity-40",
+            "after:absolute after:left-1/2 after:top-1/4 after:w-[160px] after:h-[200px] after:content-[''] after:z-[-1] size-[600px] bg-cover opacity-70 after:blur-3xl after:opacity-80",
+            `before:${background} after:${background}`
           )}
-        ></div>
+        ></motion.div>
       </div>
       <div className="relative flex justify-center size-full">
         <main className="relative flex flex-col min-h-[calc(100dvh-80px)] w-full md:min-w-[768px] max-w-5xl mt-14 py-5 lg:px-5 shrink items-stretch grow">

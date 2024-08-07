@@ -34,6 +34,10 @@
   }
 }
 
+.pac-logo:after {
+  @apply !hidden;
+}
+
 .gm-style .gm-style-iw-c {
   @apply !p-4 bg-white dark:bg-base-full-dark text-base-color-h dark:text-base-color-dark-h rounded-xl shadow-medium;
 
@@ -67,4 +71,31 @@
   & .view-link {
     @apply !hidden;
   }
+}
+
+.gmnoprint {
+  @apply !hidden;
+}
+
+.gm-style-cc {
+  @apply !hidden;
+}
+
+.gm-style a > div > img {
+  @apply !hidden;
+}
+
+.gm-style-iw-d {
+  @apply !mt-6;
+  & .address {
+    @apply !flex flex-col gap-1;
+
+    & * {
+      @apply text-base-color-h dark:!text-base-color-dark-h;
+    }
+  }
+}
+
+.gm-title.gm-full-width {
+  @apply !fixed top-0 left-0 !m-4 !text-base-color dark:!text-base-color-dark capitalize;
 }

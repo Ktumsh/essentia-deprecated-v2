@@ -8,7 +8,6 @@ export const metadata: Metadata = {
 const AIPage = () => {
   return (
     <>
-      <div className="page-bg-v2 fixed inset-0 size-full bg-cover bg-light-gradient-v2 dark:bg-none"></div>
       <HandleAI />
     </>
   );

@@ -56,7 +56,7 @@ export default function AvatarDropdown({ session }: any) {
         <DropdownMenu aria-label="Acciones del perfil" variant="flat">
           <DropdownItem
             key="profile"
-            textValue="Profile"
+            textValue="Perfil"
             href={`/profile/${username}`}
             className="h-14 gap-2 rounded-xl data-[hover=true]:bg-gray-200 dark:data-[hover=true]:bg-base-dark text-base-color-h dark:text-base-color-dark-m data-[hover=true]:text-base-color-h dark:data-[hover=true]:text-base-color-dark !duration-150"
           >
@@ -68,7 +68,7 @@ export default function AvatarDropdown({ session }: any) {
           <DropdownItem
             className="rounded-xl data-[hover=true]:bg-gray-200 dark:data-[hover=true]:bg-base-dark text-base-color-h dark:text-base-color-dark-m data-[hover=true]:text-base-color-h dark:data-[hover=true]:text-base-color-dark !duration-150"
             key="configurations"
-            textValue="Configurations"
+            textValue="Configuración"
           >
             Configuración
           </DropdownItem>
@@ -81,16 +81,11 @@ export default function AvatarDropdown({ session }: any) {
           </DropdownItem>
           <DropdownItem
             isReadOnly
-            endContent={
-              <ThemeToggle
-                buttonClass="bg-gray-200 dark:bg-base-dark"
-                spanClass="dark:bg-base-full-dark"
-              />
-            }
+            endContent={<ThemeToggle />}
             className="rounded-xl data-[hover=true]:bg-gray-200 dark:data-[hover=true]:bg-base-dark text-base-color-h dark:text-base-color-dark-m data-[hover=true]:text-base-color-h dark:data-[hover=true]:text-base-color-dark"
-            textValue="Help and Feedback"
+            textValue="Tema"
           >
-            Cambiar tema
+            Tema
           </DropdownItem>
           <DropdownItem
             id="avatar_logout"

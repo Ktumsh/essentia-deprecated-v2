@@ -99,9 +99,10 @@ export default async function RootLayout({
         className={`bg-zinc-50 ${session ? "dark:bg-base-full-dark" : ""} isolate antialiased ${fontMotiva.variable} ${spaceGrotesk.variable} ${spaceMono.variable} ${dmSans.variable} font-dmsans`}
       >
         <Providers
-          forcedTheme={!session ? "light" : ""}
+          forcedTheme={!session ? "light" : undefined}
           attribute="class"
           defaultTheme="light"
+          disableTransitionOnChange
         >
           <div className="min-h-dvh size-full relative">{children}</div>
         </Providers>

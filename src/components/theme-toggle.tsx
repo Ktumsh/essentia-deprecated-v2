@@ -1,23 +1,13 @@
 "use client";
 
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { useIsSSR } from "@react-aria/ssr";
-import clsx from "clsx";
-import { Tooltip } from "@nextui-org/react";
-import { MoonIcon, SunIcon } from "./icons/icons";
+import { Button, Tooltip } from "@nextui-org/react";
+import { MoonIcon, SunIcon, SystemIcon } from "./icons/icons";
 import { cn } from "@/lib/utils";
 
-export interface ThemeSwitchProps {
-  className?: string;
-  buttonClass?: string;
-  spanClass?: string;
-}
-
-export const ThemeToggle: FC<ThemeSwitchProps> = ({
-  buttonClass = "dark:bg-base-full-dark",
-  spanClass = "dark:bg-base-dark",
-}) => {
+export const ThemeToggle = ({ className = "!size-6" }) => {
   const { theme, setTheme } = useTheme();
   const isSSR = useIsSSR();
   const [mounted, setMounted] = useState(false);
@@ -32,58 +22,98 @@ export const ThemeToggle: FC<ThemeSwitchProps> = ({
     }
   }, [theme, isSSR]);
 
-  const handleThemeToggle = () => {
+  const handleThemeChange = (newTheme: string) => {
     if (!isSSR) {
-      setTheme(theme === "dark" ? "light" : "dark");
+      setTheme(newTheme);
     }
   };
 
-  // Si el componente aún no está montado, evita renderizarlo
   if (!mounted) return null;
 
   return (
-    <Tooltip
-      className="bg-gradient-to-br dark:from-white dark:to-gray-300 from-base-dark to-base-full-dark text-xs dark:text-base-color-h text-base-color-dark-h"
-      content={`Cambiar a modo ${theme === "dark" ? "claro" : "oscuro"}`}
-      delay={500}
-      closeDelay={0}
+    <div
+      className={cn(
+        "flex gap-1.5 rounded-full border border-gray-200 dark:border-base-dark"
+      )}
     >
-      <button
-        aria-label="Cambiar modo"
-        type="button"
-        className={clsx(
-          `group btn__mode relative inline-flex flex-shrink-0 items-center justify-start w-14 h-8 px-1 text-base-color-h dark:text-gray-400 bg-gray-200 rounded-full overflow-hidden cursor-pointer ${
-            theme === "dark" ? "darkmode" : ""
-          }`,
-          buttonClass
-        )}
-        onClick={handleThemeToggle}
+      <Tooltip
+        content="Sistema"
+        delay={800}
+        closeDelay={0}
+        classNames={{
+          content:
+            "bg-white dark:bg-base-dark text-xs text-base-color-h dark:text-base-color-dark",
+        }}
       >
-        <SunIcon
+        <Button
+          disableRipple
+          isIconOnly
+          size="sm"
+          radius="full"
+          onPress={() => handleThemeChange("system")}
           className={cn(
-            "z-0 absolute left-1.5 text-current text-medium transition-transform-opacity",
-            `${
-              theme !== "dark" ? "opacity-100 scale-100" : "opacity-0 scale-50"
-            }`
+            "text-base-color-h dark:text-gray-400 bg-transparent min-w-6",
+            theme === "system" && "!bg-gray-200 dark:!bg-base-dark",
+            className
           )}
-        />
-        <span
+        >
+          <SystemIcon
+            className={cn("size-3", className === "!size-8" && "size-4")}
+          />
+        </Button>
+      </Tooltip>
+      <Tooltip
+        content="Claro"
+        delay={800}
+        closeDelay={0}
+        classNames={{
+          content:
+            "bg-white dark:bg-base-dark text-xs text-base-color-h dark:text-base-color-dark",
+        }}
+      >
+        <Button
+          disableRipple
+          isIconOnly
+          size="sm"
+          radius="full"
+          onPress={() => handleThemeChange("light")}
           className={cn(
-            `flex justify-center items-center size-6 rounded-full bg-white shadow-[0_2px_10px_rgba(0,0,0,.2)] dark:shadow-[0_2px_10px_rgba(0,_0,_0,_0.3)] transition-[margin,_width] z-10 group-active:w-7 ${
-              theme === "dark"
-                ? "mr-6 group-active:mr-5"
-                : "ml-6 group-active:ml-5"
-            }`,
-            spanClass
+            "text-base-color-h dark:text-gray-400 bg-transparent min-w-6",
+            theme === "light" && "!bg-gray-200 dark:!bg-base-dark",
+            className
           )}
-        ></span>
-        <MoonIcon
+        >
+          <SunIcon
+            className={cn("size-3", className === "!size-8" && "size-4")}
+          />
+        </Button>
+      </Tooltip>
+      <Tooltip
+        content="Oscuro"
+        delay={800}
+        closeDelay={0}
+        classNames={{
+          content:
+            "bg-white dark:bg-base-dark text-xs text-base-color-h dark:text-base-color-dark",
+        }}
+      >
+        <Button
+          disableRipple
+          isIconOnly
+          size="sm"
+          radius="full"
+          onPress={() => handleThemeChange("dark")}
           className={cn(
-            "z-0 absolute right-1.5 text-medium opacity-100 transition-transform-opacity",
-            `${theme === "dark" ? "opacity-100" : "opacity-0 translate-x-3"}`
+            "text-base-color-h dark:text-gray-400 bg-transparent min-w-6",
+            theme === "dark" && "!bg-gray-200 dark:!bg-base-dark",
+            className
           )}
-        />
-      </button>
-    </Tooltip>
+        >
+          <MoonIcon
+            className={cn("size-3", className === "!size-8" && "size-4")}
+          />
+        </Button>
+      </Tooltip>
+    </div>
   );
 };

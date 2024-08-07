@@ -14,6 +14,7 @@ export const metadata: Metadata = {
     default: siteConfig.name,
   },
   description: siteConfig.description,
+  manifest: "/manifest.json",
   alternates: {
     canonical: "/",
   },

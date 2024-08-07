@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "@nextui-org/react";
 import { MAINCAP_RESOURCES } from "@/consts/recom-carousel";
 import RecomCarouselItem from "./carousel-item";
@@ -11,20 +11,20 @@ const Carousel = () => {
   const itemList = MAINCAP_RESOURCES.slice(0, 5);
   const intervalRef = useRef<NodeJS.Timeout>();
 
-  useEffect(() => {
-    startAutoChange();
-    return () => stopAutoChange();
-  }, [itemList.length]);
-
-  const startAutoChange = () => {
+  const startAutoChange = useCallback(() => {
     intervalRef.current = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % itemList.length);
     }, 8000);
-  };
+  }, [itemList.length]);
 
-  const stopAutoChange = () => {
+  const stopAutoChange = useCallback(() => {
     clearInterval(intervalRef.current);
-  };
+  }, []);
+
+  useEffect(() => {
+    startAutoChange();
+    return () => stopAutoChange();
+  }, [startAutoChange, stopAutoChange]);
 
   const prevSlide = () => {
     setCurrentIndex(

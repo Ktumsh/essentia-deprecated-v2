@@ -1,4 +1,4 @@
-import { Image } from "@nextui-org/react";
+import Image from "next/image";
 import { ArrowRightV2Icon } from "../icons/icons";
 import Link from "next/link";
 
@@ -41,10 +41,13 @@ const ResourcesItem = ({
         </h4>
       </div>
       <Image
-        removeWrapper
+        priority
+        quality={90}
+        width={600}
+        height={400}
+        src={img || ""}
+        alt={alt || ""}
         className="relative size-full object-cover rounded-xl brightness-95 z-0 lg:group-hover:brightness-75 blur-0 !transition-all dark:lg:group-hover:blur-lg"
-        src={img}
-        alt={alt}
       />
       <div className="absolute inset-0 rounded-xl bg-[linear-gradient(to_bottom,_rgba(0,_0,_0,_0.4)_0%,_rgba(0,_0,_0,_0)_40%)]"></div>
       <div className="flex items-center justify-end absolute bottom-0 h-auto w-full p-3 text-inherit subpixel-antialiased rounded-b-xl bg-white/30 dark:bg-base-full-dark-40 border-t-1 border-gray-100/50 dark:border-base-full-dark-50 backdrop-blur backdrop-saturate-150 lg:group-hover:pt-[195px] lg:group-hover:bg-white/50 dark:lg:group-hover:bg-base-full-dark-40 lg:group-hover:rounded-xl transition-all duration-500 z-10">

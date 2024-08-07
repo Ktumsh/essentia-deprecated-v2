@@ -74,7 +74,7 @@ const ProfileInfo = ({ session }: any) => {
       <div className="relative flex flex-col px-8 py-3 z-10">
         {/*Foto de perfil y botón editar*/}
         <div className="relative flex flex-wrap justify-between mb-5">
-          <div className="relative w-1/5 h-1/5 md:size-[15%] min-w-12 mt-[-15%] mb-3">
+          <div className="relative size-1/5 md:size-[15%] min-w-12 mt-[-15%] mb-3">
             <div className="w-full pb-[100%]"></div>
             <div className="absolute top-[5%] sm:top-[15%] md:top-[40%] left-0 size-full">
               <div className="size-[calc(100%+4px)] absolute top-[-2px] left-[-2px] rounded-full">
@@ -111,9 +111,9 @@ const ProfileInfo = ({ session }: any) => {
                         <Avatar
                           showFallback
                           src="https://images.unsplash.com/broken"
-                          icon={<AvatarIcon className="w-16 h-16" />}
+                          icon={<AvatarIcon className="size-16" />}
                           classNames={{
-                            icon: "text-base-color-m dark:text-base-color-dark-m size-[80%]",
+                            icon: "text-base-color-m dark:text-base-color-dark-m size-4/5",
                             base: "bg-gray-300 dark:bg-gray-600 absolute inset-0 bg-center bg-no-repeat bg-cover w-full h-full",
                             name: "font-medium text-base-color-h dark:text-base-color-dark-h",
                           }}
@@ -266,11 +266,9 @@ const ProfileInfo = ({ session }: any) => {
                                     <Avatar
                                       showFallback
                                       src="https://images.unsplash.com/broken"
-                                      icon={
-                                        <AvatarIcon className="w-14 h-14" />
-                                      }
+                                      icon={<AvatarIcon className="size-14" />}
                                       classNames={{
-                                        icon: "text-base-color-m dark:text-base-color-dark-m size-[80%]",
+                                        icon: "text-base-color-m dark:text-base-color-dark-m size-4/5",
                                         base: "bg-gray-300 dark:bg-gray-600 absolute inset-0 bg-center bg-no-repeat bg-cover w-full h-full",
                                         name: "font-medium text-base-color-h dark:text-base-color-dark-h",
                                       }}

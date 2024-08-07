@@ -55,7 +55,7 @@ export default function ProfileDropdown({ name, username, avatar }: Props) {
                 },
                 src: avatar,
                 icon: (
-                  <AvatarIcon className="text-base-color-m dark:text-base-color-dark-m size-[80%]" />
+                  <AvatarIcon className="text-base-color-m dark:text-base-color-dark-m size-4/5" />
                 ),
               }}
             />

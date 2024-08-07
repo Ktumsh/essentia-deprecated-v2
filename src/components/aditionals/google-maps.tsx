@@ -1,10 +1,20 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import CenterSwitch from "./center-switch";
-import { LocationIcon } from "../icons/icons";
+import {
+  LocationIcon,
+  ZoomInIcon,
+  ZoomOutIcon,
+  FullscreenIcon,
+} from "../icons/icons";
 import "./map.css";
+import { Button, LinkIcon, Tooltip } from "@nextui-org/react";
+import { tooltipStyles } from "@/styles/tooltip-styles";
+
+import ReactDOMServer from "react-dom/server";
+import InfoWindowContent from "./info-window-content";
 
 export default function GoogleMaps() {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -14,63 +24,88 @@ export default function GoogleMaps() {
   const markers = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
   const [isSelected, setIsSelected] = useState(true);
 
-  const createMarker = (
-    place: google.maps.places.PlaceResult,
-    map: google.maps.Map,
-    infoWindow: google.maps.InfoWindow
-  ) => {
-    const marker = new google.maps.marker.AdvancedMarkerElement({
-      map,
-      position: place.geometry!.location!,
-      title: place.name,
-    });
+  const createMarker = useCallback(
+    (
+      place: google.maps.places.PlaceResult,
+      map: google.maps.Map,
+      infoWindow: google.maps.InfoWindow
+    ) => {
+      const marker = new google.maps.marker.AdvancedMarkerElement({
+        map,
+        position: place.geometry!.location!,
+        title: place.name,
+      });
 
-    marker.addListener("click", () => {
-      const service = new google.maps.places.PlacesService(map);
-      service.getDetails(
-        {
-          placeId: place.place_id!,
-          fields: [
-            "name",
-            "formatted_address",
-            "geometry",
-            "rating",
-            "opening_hours",
-            "formatted_phone_number",
-            "website",
-          ],
-        },
-        (placeDetails, status) => {
-          if (
-            status === google.maps.places.PlacesServiceStatus.OK &&
-            placeDetails
-          ) {
-            const contentString = `
-              <div class="flex flex-col gap-2 text-base-color">
-                <h2 class="text-xl font-bold mb-2 font-motivasans">${placeDetails.name}</h2>
-                <p><strong class="font-bold">Dirección:</strong> ${placeDetails.formatted_address}</p>
-                ${placeDetails.rating ? `<p><strong class="font-bold">Rating:</strong> ${placeDetails.rating}</p>` : ""}
-                ${placeDetails.opening_hours ? `<p><strong class="font-bold">Horario:</strong><br> ${placeDetails.opening_hours.weekday_text!.join("<br>")}</p>` : ""}
-                ${placeDetails.formatted_phone_number ? `<p><strong class="font-bold">Teléfono:</strong> ${placeDetails.formatted_phone_number}</p>` : ""}
-                ${placeDetails.website ? `<p><strong class="font-bold">Sitio Web:</strong> <a href="${placeDetails.website}" target="_blank" class="text-blue-500 underline">${placeDetails.website}</a></p>` : ""}
-              </div>
-            `;
-            infoWindow.setContent(contentString);
-            infoWindow.open(map, marker);
+      marker.addListener("click", () => {
+        const service = new google.maps.places.PlacesService(map);
+        service.getDetails(
+          {
+            placeId: place.place_id!,
+            fields: [
+              "name",
+              "formatted_address",
+              "geometry",
+              "rating",
+              "opening_hours",
+              "formatted_phone_number",
+              "website",
+            ],
+          },
+          (placeDetails, status) => {
+            if (
+              status === google.maps.places.PlacesServiceStatus.OK &&
+              placeDetails
+            ) {
+              const contentString = ReactDOMServer.renderToString(
+                <InfoWindowContent placeDetails={placeDetails} />
+              );
+              infoWindow.setContent(contentString);
+              infoWindow.open(map, marker);
+            }
           }
-        }
-      );
-    });
+        );
+      });
 
-    markers.current.push(marker);
-  };
+      markers.current.push(marker);
+    },
+    []
+  );
 
-  const clearMarkers = () => {
+  const clearMarkers = useCallback(() => {
     markers.current.forEach((marker) => {
-      marker.map = null;
+      if (marker.map) {
+        marker.map = null;
+      }
     });
     markers.current = [];
-  };
+  }, []);
+
+  const searchNearby = useCallback(
+    (types: string[], pos: google.maps.LatLngLiteral) => {
+      if (!mapInstance.current) return;
+
+      const service = new google.maps.places.PlacesService(mapInstance.current);
+
+      clearMarkers();
+
+      types.forEach((type) => {
+        const request: google.maps.places.PlaceSearchRequest = {
+          location: pos,
+          radius: 2000,
+          type,
+        };
+
+        service.nearbySearch(request, (results, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+            results.forEach((place) => {
+              createMarker(place, mapInstance.current!, infoWindow.current!);
+            });
+          }
+        });
+      });
+    },
+    [createMarker, clearMarkers]
+  );
 
   useEffect(() => {
     const fetchApiKey = async () => {
@@ -104,9 +139,9 @@ export default function GoogleMaps() {
             zoom: 17,
             mapId: "13605448a0dcb21f",
             mapTypeControl: false,
-            zoomControl: true,
-            streetViewControl: true,
-            fullscreenControl: true,
+            zoomControl: false,
+            streetViewControl: false,
+            fullscreenControl: false,
             rotateControl: true,
             zoomControlOptions: {
               position: google.maps.ControlPosition.RIGHT_CENTER,
@@ -204,7 +239,7 @@ export default function GoogleMaps() {
     };
 
     initializeMap();
-  }, []);
+  }, [searchNearby, clearMarkers, createMarker]);
 
   const handleLocationError = (
     browserHasGeolocation: boolean,
@@ -219,30 +254,6 @@ export default function GoogleMaps() {
         : "Error: Tu navegador no soporta geolocalización."
     );
     infoWindow.open(map);
-  };
-
-  const searchNearby = (types: string[], pos: google.maps.LatLngLiteral) => {
-    if (!mapInstance.current) return;
-
-    const service = new google.maps.places.PlacesService(mapInstance.current);
-
-    clearMarkers();
-
-    types.forEach((type) => {
-      const request: google.maps.places.PlaceSearchRequest = {
-        location: pos,
-        radius: 6000,
-        type,
-      };
-
-      service.nearbySearch(request, (results, status) => {
-        if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-          results.forEach((place) => {
-            createMarker(place, mapInstance.current!, infoWindow.current!);
-          });
-        }
-      });
-    });
   };
 
   const centerLocation = () => {
@@ -283,8 +294,28 @@ export default function GoogleMaps() {
     }
   };
 
+  const handleZoomIn = () => {
+    if (mapInstance.current) {
+      mapInstance.current.setZoom(mapInstance.current.getZoom()! + 1);
+    }
+  };
+
+  const handleZoomOut = () => {
+    if (mapInstance.current) {
+      mapInstance.current.setZoom(mapInstance.current.getZoom()! - 1);
+    }
+  };
+
+  const handleFullscreen = () => {
+    if (mapRef.current) {
+      if (mapRef.current.requestFullscreen) {
+        mapRef.current.requestFullscreen();
+      }
+    }
+  };
+
   return (
-    <div className="relative h-full">
+    <div className="relative h-full z-10">
       <div className="py-5 flex items-center">
         <div className="flex items-center w-full gap-5">
           <h2 className="text-base sm:text-2xl font-bold text-base-color-h dark:text-base-color-dark">
@@ -299,24 +330,91 @@ export default function GoogleMaps() {
       </div>
       <div
         ref={mapRef}
-        className="w-full h-96 sm:h-[600px] rounded-xl overflow-hidden shadow-medium !focus:outline-0"
+        className="peer fullscreen w-full h-96 sm:h-[600px] rounded-xl overflow-hidden shadow-medium !focus:outline-0 [&_*]:!border-none"
       >
         <input
           ref={searchRef}
           type="text"
           placeholder="Buscar por nombre o ubicación"
-          className="w-56 sm:w-96 h-[38px] px-4 bg-white placeholder:text-xs lg:placeholder:text-sm placeholder:text-base-color-m text-sm text-black p-2 mt-[10px] ms-[10px] rounded-full outline-none ring-0 focus:ring-base-dark-50 focus:shadow-[0_1px_10px_rgba(0,_0,_0,_0.3)] border-0 shadow-[0_1px_4px_rgba(0,_0,_0,_0.3)] transition"
+          className="w-56 sm:w-80 h-[38px] px-4 p-2 mt-2 ml-2 bg-white dark:bg-base-full-dark placeholder:text-xs lg:placeholder:text-sm placeholder:text-base-color-m dark:placeholder:text-base-color-dark-m text-sm text-base-color dark:text-base-color-dark rounded-full outline-none ring-0 focus:ring-base-dark-50 border-0 shadow-small transition"
         />
       </div>
-      <button
-        title="Centrar"
-        className="group flex items-center justify-center absolute top-52 sm:top-72 right-[21px] size-[29px] rounded-lg z-50 bg-white shadow-[0_1px_4px_rgba(0,_0,_0,_0.3)]"
-        onClick={centerLocation}
+      <Tooltip
+        content="Pantalla completa"
+        placement="left"
+        delay={800}
+        closeDelay={0}
+        classNames={{
+          content: tooltipStyles.content,
+        }}
       >
-        <div className="relative size-full">
-          <LocationIcon className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-5 text-[#525252] group-hover:text-[#333333]" />
-        </div>
-      </button>
+        <Button
+          isIconOnly
+          className="absolute top-20 right-2 bg-white dark:bg-base-full-dark text-base-color-h dark:text-base-color-dark"
+          onPress={handleFullscreen}
+        >
+          <FullscreenIcon className="size-6" />
+        </Button>
+      </Tooltip>
+      <Tooltip
+        content="Centrar ubicación"
+        placement="left"
+        delay={800}
+        closeDelay={0}
+        classNames={{
+          content: tooltipStyles.content,
+        }}
+      >
+        <Button
+          size="sm"
+          radius="full"
+          isIconOnly
+          className="!size-9 absolute top-1/2 right-2 bg-white dark:bg-base-full-dark text-base-color-h dark:text-base-color-dark"
+          onPress={centerLocation}
+        >
+          <LocationIcon className="size-5" />
+        </Button>
+      </Tooltip>
+      <div className="absolute bottom-56 right-2 flex flex-col space-y-2 z-50">
+        <Tooltip
+          content="Aumentar"
+          placement="left"
+          delay={800}
+          closeDelay={0}
+          classNames={{
+            content: tooltipStyles.content,
+          }}
+        >
+          <Button
+            size="sm"
+            radius="full"
+            isIconOnly
+            className="!size-9 bg-white dark:bg-base-full-dark text-base-color-h dark:text-base-color-dark"
+            onPress={handleZoomIn}
+          >
+            <ZoomInIcon className="size-5" />
+          </Button>
+        </Tooltip>
+        <Tooltip
+          content="Alejar"
+          placement="left"
+          delay={800}
+          closeDelay={0}
+          classNames={{
+            content: tooltipStyles.content,
+          }}
+        >
+          <Button
+            size="sm"
+            radius="full"
+            isIconOnly
+            className="!size-9 bg-white dark:bg-base-full-dark text-base-color-h dark:text-base-color-dark"
+            onPress={handleZoomOut}
+          >
+            <ZoomOutIcon className="size-5" />
+          </Button>
+        </Tooltip>
+      </div>
     </div>
   );
 }

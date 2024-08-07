@@ -207,7 +207,7 @@ const CarouselPrevious = React.forwardRef<
       size={size}
       aria-label="Previous slide"
       className={cn(
-        "inline-flex items-center justify-center px-0 min-w-0 max-w-[48px] max-h-[48px] w-12 h-12 rounded-lg bg-black/10 hover:bg-black/20 active:bg-black/30 pointer-events-auto",
+        "inline-flex items-center justify-center px-0 min-w-0 max-w-[48px] max-h-[48px] !size-12 rounded-lg bg-black/10 hover:bg-black/20 active:bg-black/30 pointer-events-auto",
         orientation === "horizontal" ? "" : "rotate-90",
         className
       )}
@@ -235,7 +235,7 @@ const CarouselNext = React.forwardRef<
       size={size}
       aria-label="Next slide"
       className={cn(
-        "inline-flex items-center justify-center px-0 min-w-0 max-w-[48px] max-h-[48px] w-12 h-12 rounded-lg bg-black/10 hover:bg-black/20 active:bg-black/30 pointer-events-auto",
+        "inline-flex items-center justify-center px-0 min-w-0 max-w-[48px] max-h-[48px] !size-12 rounded-lg bg-black/10 hover:bg-black/20 active:bg-black/30 pointer-events-auto",
         orientation === "horizontal" ? "" : "rotate-90",
         className
       )}

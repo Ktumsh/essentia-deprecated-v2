@@ -19,7 +19,7 @@ const MenuButton: React.FC<Props> = (props) => {
         onClick={props.toggleMenu}
         isIconOnly
         disableRipple
-        className="h-8 w-8 min-w-8 rounded-full overflow-hidden"
+        className="!size-8 min-w-8 rounded-full overflow-hidden"
       >
         {props.sessionImage ? (
           <Image

@@ -6,7 +6,7 @@ const HomeLine = () => {
       <div className="mx-auto">
         <div className="inline-block rounded-full p-[4.5px] border-2 border-bittersweet-400/30"></div>
       </div>
-      <div className="w-[3px] h-[42%] sm:h-[58%] lg:h-[50%] mx-auto rounded-full bg-[linear-gradient(transparent,#fa8072_30%)]"></div>
+      <div className="w-[3px] h-[42%] sm:h-[58%] lg:h-1/2 mx-auto rounded-full bg-[linear-gradient(transparent,#fa8072_30%)]"></div>
       <div className="mx-auto my-4">
         <div className="relative inline-block">
           <Image

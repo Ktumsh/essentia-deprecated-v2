@@ -8,6 +8,7 @@ import Section from "./section";
 import { $$ } from "@/lib/dom-selector";
 import Image from "next/image";
 import Link from "next/link";
+import Footer from "./footer";
 
 const Landing = () => {
   useEffect(() => {
@@ -249,6 +250,7 @@ const Landing = () => {
           <LandingCrop className="absolute block w-full h-28 bottom-0 rotate-180" />
         </div>
       </article>
+      <Footer />
     </article>
   );
 };

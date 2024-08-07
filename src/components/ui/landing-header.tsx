@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 
 const LandingHeader = () => {
   const [isChanged, setIsChanged] = useState(false);
@@ -10,26 +10,29 @@ const LandingHeader = () => {
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
   const [vh, setVh] = useState(0);
-  const restringedPaths = ["/login", "/signup"];
+  const restringedPaths = useMemo(() => ["/login", "/signup"], []);
 
   const headerRef = useRef(null);
 
-  const sections = [
-    { id: "nuestros_recursos", label: "Nuestros recursos" },
-    { id: "nuestro_metodo", label: "Nuestro método" },
-    { id: "noticias_al_dia", label: "Noticias al día" },
-    { id: "essentia_ai", label: "Essentia AI" },
-    { id: "todo_y_mas", label: "Más" },
-  ];
+  const sections = useMemo(
+    () => [
+      { id: "nuestros_recursos", label: "Nuestros recursos" },
+      { id: "nuestro_metodo", label: "Nuestro método" },
+      { id: "noticias_al_dia", label: "Noticias al día" },
+      { id: "essentia_ai", label: "Essentia AI" },
+      { id: "todo_y_mas", label: "Más" },
+    ],
+    []
+  );
 
-  const isRestringedPath = () => {
+  const isRestringedPath = useCallback(() => {
     return (
       typeof window !== "undefined" &&
       restringedPaths.includes(window.location.pathname)
     );
-  };
+  }, [restringedPaths]);
 
-  const checkScreenSizeAndUpdateNavbar = () => {
+  const checkScreenSizeAndUpdateNavbar = useCallback(() => {
     const scrollTop = window.scrollY;
 
     if (isLargeScreen) {
@@ -38,21 +41,21 @@ const LandingHeader = () => {
         setTimeout(() => {
           setIsChanged(true);
           setIsChanging(false);
-        }, 150); // Duración de la transición
+        }, 150);
       } else if (scrollTop <= vh && isChanged) {
         setIsChanging(true);
         setTimeout(() => {
           setIsChanged(false);
           setIsChanging(false);
-        }, 150); // Duración de la transición
+        }, 150);
       }
     } else {
       setIsChanged(false);
       setIsChanging(false);
     }
-  };
+  }, [isChanged, isLargeScreen, vh]);
 
-  const handleSetActiveLink = () => {
+  const handleSetActiveLink = useCallback(() => {
     const sections = document.querySelectorAll("section");
     if (sections.length === 0) {
       setActiveSection("");
@@ -66,18 +69,18 @@ const LandingHeader = () => {
     if (index >= 0 && sections[index]) {
       setActiveSection(sections[index].id);
     }
-  };
+  }, []);
 
-  const handleSmoothScroll = (
-    event: React.MouseEvent<HTMLAnchorElement>,
-    sectionId: string
-  ) => {
-    event.preventDefault();
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const handleSmoothScroll = useCallback(
+    (event: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
+      event.preventDefault();
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -106,7 +109,7 @@ const LandingHeader = () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
     };
-  }, [isChanged, isLargeScreen, vh]);
+  }, [checkScreenSizeAndUpdateNavbar, handleSetActiveLink]);
 
   return (
     <header

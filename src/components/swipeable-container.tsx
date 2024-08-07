@@ -25,8 +25,8 @@ const SwipeableContainer = ({
     <div
       {...handlers}
       className={cn(
-        "absolute inset-0 size-full transition-all",
-        isMenuOpen ? "z-[100] duration-0" : "z-40 delay-[400ms] duration-0"
+        "absolute inset-0 size-full transition-all block md:hidden",
+        isMenuOpen ? "z-[100] duration-0" : "z-10 delay-[400ms] duration-0"
       )}
     >
       {children}

@@ -29,7 +29,7 @@ const ResourcesItem = ({
     shadow-md
     hover:shadow-lg
     border border-gray-200 dark:border-none
-    rounded-xl transition-all hover:z-50
+    rounded-xl transition-all md:hover:z-50
     motion-reduce:transition-none h-48 sm:h-[241px] duration-500`}
     >
       <div className="flex flex-col items-start justify-start absolute w-full shrink-0 top-1 px-5 pt-3 z-10">

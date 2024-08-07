@@ -275,7 +275,7 @@ const MainSearch: FC = () => {
         </Button>
       );
     },
-    [activeItem, menuNodes, handleSearchSelect]
+    [activeItem, menuNodes, handleSearchSelect, width]
   );
 
   return (
@@ -305,6 +305,7 @@ const MainSearch: FC = () => {
       </Button>
 
       <Modal
+        placement="center"
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         hideCloseButton

@@ -6,8 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import MenuButton from "./menu-button";
 import MobileMenu from "./mobile-menu";
-import useBodySwipeable from "@/lib/hooks/use-body-swipeable";
-import { $ } from "@/lib/dom-selector";
+import { useSwipeable } from "react-swipeable";
 
 interface MobileHeaderProps {
   session: any;
@@ -20,7 +19,7 @@ const MobileHeader = ({ session }: MobileHeaderProps) => {
   const toggleMenu = useCallback(() => {
     setIsMenuOpen((prev) => {
       const newState = !prev;
-      $("body")?.classList.toggle("overflow-hidden", newState);
+      document.body.classList.toggle("overflow-hidden", newState);
       return newState;
     });
   }, []);
@@ -28,40 +27,39 @@ const MobileHeader = ({ session }: MobileHeaderProps) => {
   const handleSwipedLeft = useCallback(() => {
     if (!isMenuOpen) {
       setIsMenuOpen(true);
-      $("body")?.classList.add("overflow-hidden");
+      document.body.classList.add("overflow-hidden");
     }
   }, [isMenuOpen]);
 
   const handleSwipedRight = useCallback(() => {
     if (isMenuOpen) {
       setIsMenuOpen(false);
-      $("body")?.classList.remove("overflow-hidden");
+      document.body.classList.remove("overflow-hidden");
     }
   }, [isMenuOpen]);
 
-  const swipeHandlers = useBodySwipeable(handleSwipedLeft, handleSwipedRight);
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: handleSwipedLeft,
+    onSwipedRight: handleSwipedRight,
+    preventScrollOnSwipe: true,
+    trackMouse: true,
+  });
 
   useEffect(() => {
-    bodyRef.current = document.querySelector("body");
+    const bodyElement = document.body;
 
     const handleSwipe = (event: Event) => {
       if (event instanceof TouchEvent || event instanceof MouseEvent) {
-        if (event.type === "touchstart" || event.type === "mousedown") {
-          swipeHandlers.ref(event.target as HTMLElement);
-        }
+        swipeHandlers.ref(bodyElement);
       }
     };
 
-    if (bodyRef.current) {
-      bodyRef.current.addEventListener("touchstart", handleSwipe);
-      bodyRef.current.addEventListener("mousedown", handleSwipe);
-    }
+    bodyElement.addEventListener("touchstart", handleSwipe);
+    bodyElement.addEventListener("mousedown", handleSwipe);
 
     return () => {
-      if (bodyRef.current) {
-        bodyRef.current.removeEventListener("touchstart", handleSwipe);
-        bodyRef.current.removeEventListener("mousedown", handleSwipe);
-      }
+      bodyElement.removeEventListener("touchstart", handleSwipe);
+      bodyElement.removeEventListener("mousedown", handleSwipe);
     };
   }, [swipeHandlers]);
 

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import LoginEntry from "./login-entry";
 import Link from "next/link";
 
@@ -13,7 +12,8 @@ const LoginForm = () => {
               className="flex items-center justify-center size-full mt-5 mb-0 sm:mb-5"
               href="/bienvenida"
             >
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 className="w-32 active:scale-[.97] transition-transform"
                 width={128}
                 height={83}

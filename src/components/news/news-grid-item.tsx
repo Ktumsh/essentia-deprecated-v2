@@ -1,5 +1,4 @@
 import { Image as UIImage } from "@nextui-org/react";
-import Image from "next/image";
 import { ClockIcon, EyeIcon } from "../icons/icons";
 import Link from "next/link";
 
@@ -67,7 +66,6 @@ const NewsGridItem = ({
         className="before:absolute before:inset-0 before:z-20"
       ></Link>
       <UIImage
-        as={Image}
         width={571}
         height={320}
         removeWrapper
@@ -92,7 +90,6 @@ const NewsGridItem = ({
               className="flex flex-row items-center justify-center h-full gap-2"
             >
               <UIImage
-                as={Image}
                 width={24}
                 height={24}
                 className="size-6 rounded-full"

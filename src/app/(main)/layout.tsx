@@ -5,7 +5,6 @@ import Header from "@/components/ui/header";
 import MobileHeader from "@/components/ui/mobile-header";
 import { authConfig } from "@@/auth.config";
 import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 
 export default async function MainLayout({
   children,
@@ -13,9 +12,6 @@ export default async function MainLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authConfig);
-  if (!session) {
-    return redirect("/bienvenida");
-  }
   return (
     <>
       {/* Header */}

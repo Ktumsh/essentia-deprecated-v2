@@ -40,9 +40,8 @@ const ResourcesItem = ({
           {title}
         </h4>
       </div>
-      <Image
-        priority
-        quality={90}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
         width={600}
         height={400}
         src={img || ""}

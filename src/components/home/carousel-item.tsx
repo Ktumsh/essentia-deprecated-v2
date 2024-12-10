@@ -2,7 +2,6 @@ import { Button } from "@nextui-org/react";
 
 import { ArrowRightIcon } from "../icons/icons";
 import Link from "next/link";
-import Image from "next/image";
 
 type Props = {
   id: string;
@@ -49,9 +48,8 @@ const RecomCarouselItem = ({
           </div>
         </Link>
       </div>
-      <Image
-        priority
-        quality={90}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
         width={982}
         height={286}
         src={image}
